@@ -16,7 +16,7 @@ import java.util.List;
 public class Post {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
     @ManyToOne(fetch=FetchType.LAZY)
@@ -26,7 +26,7 @@ public class Post {
     private String title;
     private String content;
     private Timestamp createdDate;
-    private Timestamp modifiedDate;
+    private Timestamp updatedDate;
     private boolean isAnnounce;
 
     @OneToMany(mappedBy = "postId")
