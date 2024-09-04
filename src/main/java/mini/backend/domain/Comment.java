@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 public class Comment {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
     @ManyToOne(fetch=FetchType.LAZY)
@@ -27,5 +27,5 @@ public class Comment {
 
     private String content;
     private Timestamp createdDate;
-    private Timestamp modifiedDate;
+    private Timestamp updatedDate;
 }
