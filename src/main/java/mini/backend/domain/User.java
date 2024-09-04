@@ -16,14 +16,14 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     private String id;
     private String password;
     private String name;
     private Timestamp createdDate;
-    private Timestamp modifiedDate;
+    private Timestamp updatedDate;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status; //[ACTIVED, SUSPENDED, DELETED]
