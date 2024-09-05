@@ -14,8 +14,7 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
-public class Comment {
+public class Comment extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +29,4 @@ public class Comment {
     private Post postId;
 
     private String content;
-
-    @CreatedDate
-    private Timestamp createdDate;
-
-    @LastModifiedDate
-    private Timestamp updatedDate;
 }

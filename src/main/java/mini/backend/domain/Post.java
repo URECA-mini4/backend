@@ -16,8 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
-public class Post {
+public class Post extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +29,6 @@ public class Post {
     private String title;
     private String content;
 
-    @CreatedDate
-    private Timestamp createdDate;
-
-    @LastModifiedDate
-    private Timestamp updatedDate;
     private boolean isAnnounce;
 
     @OneToMany(mappedBy = "postId")
