@@ -1,22 +1,20 @@
 package mini.backend.post;
 
-import mini.backend.domain.Post;
-
 import java.util.List;
 
 public interface PostService {
 
     // 목록 조회
-    List<Post> getList();
+    List<PostDtoRes> getPostList();
 
     // 상세 조회
-    Post getById(Long postId);
+    PostDtoRes getPost(Long postId);
 
     // 생성
-    Post save(Long userId, Post post);
+    PostDtoRes create(Long userId, PostDtoReq postDtoReq);
 
     // 수정
-    Post update(Long userId, Post post);
+    PostDtoRes update(Long userId, PostDtoReq postDtoReq);
 
     // 삭제
     void delete(Long postId);
