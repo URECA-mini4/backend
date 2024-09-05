@@ -6,17 +6,15 @@ import java.util.List;
 
 public interface CommentService {
     //POST
-    void save(Comment comment);
+    void create(Comment comment);
 
     //GET
-    List<Comment> getByPostId(Long postId);
-    //List<Comment> findByUserId(Long userId);
-    //Comment findById(Long commentId);
+    List<CommentDtoRes> findById(Long postId);
 
     //PATCH
-    Comment update(Long userId, Comment comment);
+    CommentDtoReq update(Long userId, Comment comment);
 
     //DELETE
     void deleteOne(Long commentId);
-    void deleteAll(List<Long> commentId);
+    void deleteAll(List<Long> commentIds);
 }
