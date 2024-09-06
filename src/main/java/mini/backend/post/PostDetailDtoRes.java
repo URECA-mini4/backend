@@ -11,8 +11,8 @@ public class PostDetailDtoRes extends PostBaseDtoRes{
     private final String content;
 //    private final List<CommentDtoRes> comments;
 
-    public PostDetailDtoRes(Long postId, String title, boolean isAnnounce, List<UserDtoRes> userInfo, String content /*,List<CommentDtoRes> comments */) {
-        super(postId, title, isAnnounce, userInfo);
+    public PostDetailDtoRes(Long postId, String title, boolean isAnnounce, UserDtoRes userDtoRes, String content /*,List<CommentDtoRes> comments */) {
+        super(postId, title, isAnnounce, userDtoRes);
         this.content = content;
 //        this.comments = comments;
     }
