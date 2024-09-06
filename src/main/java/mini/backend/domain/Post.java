@@ -29,7 +29,7 @@ public class Post {
     private Timestamp updatedDate;
     private boolean isAnnounce;
 
-    @OneToMany(mappedBy = "postId")
+    @OneToMany(mappedBy = "postId", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 }
 
