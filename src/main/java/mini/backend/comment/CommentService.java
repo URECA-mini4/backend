@@ -12,7 +12,7 @@ public interface CommentService {
     List<CommentDtoRes> findById(Long postId);
 
     //PATCH
-    CommentDtoReq update(Long commentId);
+    CommentDtoReq update(CommentDtoReq commentDtoReq, Long userId);
 
     //DELETE
     void deleteOne(Long commentId);
