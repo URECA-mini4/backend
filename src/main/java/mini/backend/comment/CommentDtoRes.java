@@ -13,5 +13,5 @@ import java.sql.Timestamp;
 public class CommentDtoRes {
     private final Long commentId;
     private final String content;
-    private final UserDtoRes userDtoRes;
+    private final UserDtoRes userInfo;
 }

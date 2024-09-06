@@ -24,14 +24,14 @@ public class Post extends BaseTimeEntity{
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name ="user_id")
-    private User userId;
+    private User user;
 
     private String title;
     private String content;
 
     private boolean isAnnounce;
 
-    @OneToMany(mappedBy = "postId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "post", fetch=FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 }
 

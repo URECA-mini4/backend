@@ -11,6 +11,5 @@ import java.sql.Timestamp;
 @Getter
 @AllArgsConstructor
 public class CommentDtoReq {
-    private final UserDtoRes userDtoRes; //pull 받아야 함 (구현x)
     private final String content;
 }
