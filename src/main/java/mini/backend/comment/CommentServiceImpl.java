@@ -50,14 +50,13 @@ public class CommentServiceImpl implements CommentService {
     //GET
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDtoRes> findById(Long postId) {
+    public List<CommentDtoRes> findByPostId(Long postId) {
         //Post조회
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 postId: " + postId));
 
         //Post에 해당하는 댓글 조회
-        //댓글 하나도 없을 때 예외처리 해줘야 함!! 수정 필
-        List<Comment> comments = commentRepository.findAllByPost(post);
+        List<Comment> comments = post.getComments(); //댓글 없으면 빈 리스트 넘기기
 
         //Comment -> CommentDtoRes 변환
         return comments.stream()
@@ -92,7 +91,20 @@ public class CommentServiceImpl implements CommentService {
     //DELETE
     @Override
     @Transactional
-    public void deleteOne(Long commentId) {
+    public void deleteOne(Long commentId, Long userId) {
+        //유저 정보 확인
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 userId: " +userId));
+
+        //수정할 댓글 정보 확인
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 commentId: " + commentId));
+
+        //댓글 작성자와 삭제 요청자 일치 확인
+        if(!comment.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("댓글을 수정할 권한이 없음.");
+        }
+
         //삭제할 댓글 존재 확인
         if (!commentRepository.existsById(commentId)) {
             throw new IllegalArgumentException("존재하지 않는 댓글.");
