@@ -1,20 +1,21 @@
 package mini.backend.comment;
 
 import mini.backend.domain.Comment;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 public interface CommentService {
     //POST
-    void create(CommentDtoReq commentDtoReq, Long postId);
+    public Long create(CommentDtoReq commentDtoReq, Long postId, Long userId);
 
     //GET
-    List<CommentDtoRes> findById(Long postId);
+    public List<CommentDtoRes> findById(Long postId);
 
     //PATCH
-    CommentDtoRes update(CommentDtoReq commentDtoReq, Long userId);
+    public CommentDtoRes update(CommentDtoReq commentDtoReq, Long commentId, Long userId);
 
     //DELETE
-    void deleteOne(Long commentId);
-    void deleteAll(List<Long> commentIds);
+    public void deleteOne(Long commentId);
+    public void deleteAll(List<Long> commentIds);
 }
