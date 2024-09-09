@@ -2,6 +2,8 @@ package mini.backend.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,12 +17,18 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("mini4 api")
                         .version("1.0")
-                        .description("mini4 api document"));
+                        .description("mini4 api document"))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .components(new io.swagger.v3.oas.models.Components()
+                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")));
     }
 
     @Bean
     public GroupedOpenApi api() {
-        String[] paths = {"/api/v1/**"};
+        String[] paths = {"/**"};
         String[] packagesToScan = {"mini.backend"};
         return GroupedOpenApi.builder()
                 .group("mini4 api")

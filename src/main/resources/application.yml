@@ -1,4 +1,11 @@
 spring:
+  redis:
+    host: localhost
+    port: 6379
+
+
+  jwt:
+    secret: qcuhOKrfVUQCSdkyrGsYrtlIYfu/g9L7qNwglLxpdio=
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -10,7 +17,7 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
