@@ -102,7 +102,7 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    @Override
+/*    @Override
     @Transactional
     public void deleteAll(List<Long> commentIds) {
         // 삭제할 댓글이 있는지 확인 (ID 리스트 기준으로 모두 확인)
@@ -114,5 +114,5 @@ public class CommentServiceImpl implements CommentService {
 
         // 댓글들 삭제
         commentRepository.deleteAll(comments);
-    }
+    }*/
 }

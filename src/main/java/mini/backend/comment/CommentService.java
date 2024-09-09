@@ -17,5 +17,5 @@ public interface CommentService {
 
     //DELETE
     public void deleteOne(Long commentId);
-    public void deleteAll(List<Long> commentIds);
+    //public void deleteAll(List<Long> commentIds);
 }
