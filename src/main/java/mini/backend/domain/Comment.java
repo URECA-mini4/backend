@@ -1,10 +1,7 @@
 package mini.backend.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,6 +11,8 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Comment extends BaseTimeEntity{
 
     @Id
@@ -29,4 +28,8 @@ public class Comment extends BaseTimeEntity{
     private Post post;
 
     private String content;
+
+    public void editContent(String content){
+        this.content = content;
+    }
 }
