@@ -1,3 +1,4 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -34,41 +35,142 @@ main {
     padding: 20px;
 }
 
-.post-form, .post-list {
-    margin-bottom: 20px;
-}
-
-label {
+/* Forms and Inputs */
+label, input[type="text"], textarea {
     display: block;
-    margin: 10px 0 5px;
-}
-
-input[type="text"], textarea {
     width: 100%;
-    padding: 10px;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
     margin-bottom: 10px;
 }
 
+input[type="text"], textarea {
+    padding: 10px;
+    border: 1px solid #ccc; /* Border color for input fields */
+    border-radius: 4px; /* Rounded corners for input fields */
+}
+
+/* Box Styles (Common for post-form, post-list, post-detail, etc.) */
+.rounded-box {
+    border: 1px solid #ccc; /* Box border color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px; /* Space inside the box */
+    background-color: #f9f9f9; /* Background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    max-width: 600px;
+}
+
+/* For wider sections (like post-detail) */
+.wide-box {
+    max-width: 800px;
+}
+
+/* Buttons inside forms and boxes */
+.rounded-box button {
+    padding: 10px 20px; /* Padding inside the button */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Rounded corners for button */
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    font-size: 16px; /* Font size for button text */
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.rounded-box button:hover {
+    background-color: #0056b3; /* Darker background color on hover */
+}
+
+/* Post List */
 ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
-ul li {
-    margin: 10px 0;
+li {
+    padding: 10px 0; /* Space inside each list item */
+    border-bottom: 1px solid #ddd; /* Gray divider line */
 }
 
-ul li a {
+li:last-child {
+    border-bottom: none; /* Remove divider line for the last item */
+}
+
+a {
     text-decoration: none;
     color: #333;
 }
 
-ul li a:hover {
+a:hover {
     color: #4CAF50;
 }
 
+/* Comments Section */
+.comments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comments-header h2 {
+    margin: 0; /* 기본 여백 제거 */
+}
+
+.comments-header button {
+    margin: 0;
+    padding: 8px 16px; /* Adjust button padding */
+}
+
+.comment-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd; /* 구분선 */
+}
+
+.comment-item:last-child {
+    border-bottom: none; /* 마지막 댓글의 구분선 제거 */
+}
+
+/* Date Styling */
 .post-date {
     font-size: 0.9em;
     color: #666;
     margin-left: 10px;
+}
+
+.comment-form-box {
+    border: 1px solid #ccc; /* Box border color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px; /* Space inside the box */
+    background-color: #f9f9f9; /* Background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    margin: 20px auto; /* Space around the box */
+    max-width: 600px; /* Max width of the box */
+}
+
+.comment-form-box h2 {
+    margin-top: 0; /* Remove top margin */
+}
+
+.comment-form-box textarea {
+    width: 100%; /* Full width for the textarea */
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.comment-form-box button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comment-form-box button:hover {
+    background-color: #0056b3;
 }

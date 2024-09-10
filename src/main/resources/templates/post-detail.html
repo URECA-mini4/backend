@@ -7,26 +7,44 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<header>
-    <h1 th:text="${post.title}">게시글 제목</h1>
-    <button onclick="location.href='/posts'">목록으로</button>
-</header>
-<main>
-    <article>
-        <h2>내용</h2>
-        <p th:text="${post.content}">게시글 내용</p>
-    </article>
+<!-- Include the header -->
+<div th:replace="fragments/header :: header"></div>
 
-    <!-- 댓글 섹션 -->
-    <section class="comments">
-        <h2>댓글</h2>
+<main>
+    <!-- 게시글 내용 박스 -->
+    <section class="post-detail-box rounded-box">
+        <h1 th:text="${post.title}">게시글 제목</h1>
+        <p th:text="${post.content}">게시글 내용</p>
+    </section>
+
+    <!-- 댓글 섹션 박스 -->
+    <section class="comments rounded-box">
+        <div class="comments-header">
+            <h2>댓글</h2>
+        </div>
         <ul>
             <!-- Thymeleaf를 사용하여 댓글 목록을 렌더링 -->
-            <li th:each="comment : ${comments}">
+            <li th:each="comment : ${comments}" class="comment-item">
                 <p th:text="${comment.content}">댓글 내용</p>
             </li>
         </ul>
+
+        <!-- 댓글 작성 박스 -->
+        <form action="/comments" method="POST">
+            <!-- Hidden input to store postId -->
+            <input type="hidden" name="postId" th:value="${postId}">
+
+            <textarea name="content" placeholder="댓글을 입력하세요"></textarea>
+            <button type="submit">댓글 등록</button>
+        </form>
     </section>
 </main>
+
+<!-- 헤더의 프로그램명을 클릭하면 /posts 경로로 이동하도록 설정 -->
+<script>
+    document.querySelector('header h1').onclick = function() {
+        window.location.href = '/posts';
+    };
+</script>
 </body>
 </html>

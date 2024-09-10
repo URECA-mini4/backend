@@ -28,7 +28,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostBaseDtoRes> getPostList() {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAllOrderByCreatedDateDesc();
         return posts.stream()
                 .map(post -> new PostBaseDtoRes(
                         post.getPostId(),
