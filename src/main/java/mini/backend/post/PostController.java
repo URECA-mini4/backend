@@ -3,14 +3,11 @@ package mini.backend.post;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import mini.backend.domain.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 @Controller
@@ -51,11 +48,6 @@ public class PostController {
     @PatchMapping("/posts/{postId}")
     public ResponseEntity<PostDetailDtoRes> updatePost(Long userId, @PathVariable("postId") Long postId
     , @RequestParam("title") String title, @RequestParam("content") String content){
-        PostDetailDtoRes post = postService.getPost(postId);
-        if(!post.getUserInfo().getUserId().equals(userId)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다.");
-        }
-
         PostDtoReq updatePostDtoReq = new PostDtoReq(title, content);
         postService.update(userId, postId, updatePostDtoReq);
 
@@ -68,11 +60,7 @@ public class PostController {
     @Operation(summary = "게시물 삭제", description = "게시물을 삭제합니다.")
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<String> postDelete(Long userId, @PathVariable("postId") Long postId) {
-        PostDetailDtoRes post = postService.getPost(postId);
-        if(!post.getUserInfo().getUserId().equals(userId)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"삭제 권한이 없습니다.");
-        }
-        postService.delete(postId);
+        postService.delete(userId, postId);
 
         return ResponseEntity.ok("게시물이 삭제되었습니다.");
     }

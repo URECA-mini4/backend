@@ -17,6 +17,6 @@ public interface PostService {
     void update(Long userId, Long postId, PostDtoReq postDtoReq);
 
     // 삭제
-    void delete(Long postId);
+    void delete(Long userId, Long postId);
 
 }

@@ -30,7 +30,7 @@ public class User extends BaseTimeEntity{
     @Enumerated(EnumType.STRING)
     private UserRole role; //[ADMIN, USER]
 
-    @OneToMany(mappedBy = "user", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
