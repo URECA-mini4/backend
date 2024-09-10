@@ -1,5 +1,6 @@
 package mini.backend.domain;
 
+import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,6 +10,8 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Post extends BaseTimeEntity{
 
     @Id

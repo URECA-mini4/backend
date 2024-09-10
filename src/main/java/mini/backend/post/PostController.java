@@ -67,7 +67,11 @@ public class PostController {
 
     @Operation(summary = "게시물 삭제", description = "게시물을 삭제합니다.")
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<String> postDelete(@PathVariable("postId") Long postId) {
+    public ResponseEntity<String> postDelete(Long userId, @PathVariable("postId") Long postId) {
+        PostDetailDtoRes post = postService.getPost(postId);
+        if(!post.getUserInfo().getUserId().equals(userId)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"삭제 권한이 없습니다.");
+        }
         postService.delete(postId);
 
         return ResponseEntity.ok("게시물이 삭제되었습니다.");

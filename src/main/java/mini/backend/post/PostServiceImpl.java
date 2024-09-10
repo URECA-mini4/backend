@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mini.backend.comment.CommentDtoRes;
 import mini.backend.comment.CommentService;
+import mini.backend.domain.Comment;
 import mini.backend.domain.Post;
 import mini.backend.domain.User;
 import mini.backend.user.UserDtoRes;
@@ -47,7 +48,7 @@ public class PostServiceImpl implements PostService{
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다. id=" + postId));
 
-        List<CommentDtoRes> comments = commentService.findById(postId);
+        List<Comment> comments = post.getComments();
 
 //        // 임의의 댓글 데이터 생성
 //        UserDtoRes commentUser = new UserDtoRes(1L, "abc", "bae");
