@@ -28,7 +28,7 @@ public class UserController {
         newUser.setId(signupRequest.getId());
         newUser.setPassword(encodedPassword);
         newUser.setName(signupRequest.getName());
-        newUser.setRole(UserRole.ADMIN);
+        newUser.setRole(UserRole.USER);
         newUser.setStatus(UserStatus.ACTIVED);
 
 

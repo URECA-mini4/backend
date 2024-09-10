@@ -3,6 +3,7 @@ package mini.backend.service;
 import mini.backend.model.AuthenticationRequest;
 import mini.backend.model.AuthenticationResponse;
 import mini.backend.security.JwtUtil;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,20 +45,41 @@ public class AuthenticationService {
         return new AuthenticationResponse(accessToken, refreshToken);
     }
 
-    public void logout(String token) {
-        Long expiration = jwtUtil.getClaims(token).getExpiration().getTime() - System.currentTimeMillis();
-        redisTemplate.opsForValue().set(token, true, expiration, TimeUnit.MILLISECONDS);
+    public void logout(String json) {
+        try {
+            // JSON에서 accessToken 추출
+            String accessToken = jwtUtil.extractTokenFromJson(json, "accessToken");
+
+            // accessToken의 만료 시간 계산
+            Long expiration = jwtUtil.getClaims(accessToken, null).getExpiration().getTime() - System.currentTimeMillis();
+
+            // Redis에 accessToken을 블랙리스트로 등록 (expiration 기간 동안)
+            redisTemplate.opsForValue().set(accessToken, true, expiration, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            System.err.println("Invalid JWT token: " + json);
+            throw new RuntimeException("Invalid token", e);
+        }
     }
 
-    public AuthenticationResponse refreshToken(String refreshToken) {
-        if (jwtUtil.isExpired(refreshToken)) {
-            throw new RuntimeException("Refresh token is expired");
+    public AuthenticationResponse refreshToken(String json) {
+        try {
+            // JSON에서 refreshToken 추출
+            String refreshToken = jwtUtil.extractTokenFromJson(json, "refreshToken");
+
+            // 토큰 만료 여부 확인
+            if (jwtUtil.isExpired(refreshToken)) {
+                throw new RuntimeException("Refresh token is expired");
+            }
+
+            // 사용자 정보와 새 Access Token 생성
+            String username = jwtUtil.getLoginId(refreshToken);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            String newAccessToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
+
+            return new AuthenticationResponse(newAccessToken, refreshToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Invalid refresh token request", e);
         }
-
-        String username = jwtUtil.getLoginId(refreshToken);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        String newAccessToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
-
-        return new AuthenticationResponse(newAccessToken, refreshToken);
     }
 }

@@ -5,7 +5,7 @@ spring:
 
 
   jwt:
-    secret: qcuhOKrfVUQCSdkyrGsYrtlIYfu/g9L7qNwglLxpdio=
+    secret: bXlzZWNyZXRrZXlmb3JteWp3dHNlY3VyaXR5MTIzNDU2
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
