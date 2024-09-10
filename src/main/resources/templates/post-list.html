@@ -7,12 +7,11 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<header>
-    <h1>게시글 목록</h1>
-</header>
+<!-- Include the header -->
+<div th:replace="fragments/header :: header"></div>
 
 <!-- 글쓰기 폼 -->
-<section class="post-form">
+<section class="post-form rounded-box">
     <h2>새 글 작성하기</h2>
     <form id="postForm" action="/posts" method="post">
         <label for="title">제목:</label>
@@ -26,14 +25,13 @@
 </section>
 
 <!-- 게시글 목록 -->
-<section class="post-list">
+<section class="post-list rounded-box">
     <h2>게시글 목록</h2>
     <ul>
         <!-- Thymeleaf를 사용하여 게시글 목록을 렌더링 -->
         <li th:each="post : ${posts}">
             <a th:href="@{/posts/{postId}(postId=${post.postId})}">
                 <span th:text="${post.title}">게시글 제목</span>
-                <!--<span class="post-date" th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd HH:mm:ss')}">작성일</span>-->
             </a>
         </li>
     </ul>

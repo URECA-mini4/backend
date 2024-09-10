@@ -1,5 +1,6 @@
 package mini.backend.post;
 
+import mini.backend.domain.Post;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

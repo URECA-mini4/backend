@@ -24,9 +24,12 @@ public class PostController {
     // 게시물 생성
     @PostMapping("/posts")
     public String createPost(Long userId, @RequestParam("title") String title, @RequestParam("content") String content) {
+        //Long userId = (Long) session.getAttribute("userId"); -> 세션에서 가져오는 경우
+        //Long userId = Long.parseLong(principal.getName()); -> spring security 사용하는 경우
+        userId = 6L; //일단 하드코딩 해놨음
         PostDtoReq postDtoReq = new PostDtoReq(title, content);
         postService.create(userId, postDtoReq);
-        return "redirect:/post-list";  // 게시물 목록 페이지로 리다이렉트
+        return "redirect:/posts";  // 게시물 목록 페이지로 리다이렉트
     }
 
     @GetMapping("/posts")

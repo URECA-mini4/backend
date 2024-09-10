@@ -10,5 +10,5 @@ import java.sql.Timestamp;
 public class PostDtoReq {
     private final String title;
     private final String content;
-    private final boolean isAnnounce;
+    private final boolean isAnnounce = false;
 }
