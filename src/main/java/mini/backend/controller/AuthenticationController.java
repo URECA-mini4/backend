@@ -21,11 +21,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody String accessToken) {
-        authenticationService.logout(accessToken);
+    public ResponseEntity<?> logout(@RequestBody String tokens) {
+        authenticationService.logout(tokens); // accessToken과 refreshToken 모두 처리
         return ResponseEntity.ok("Successfully logged out");
     }
-
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody String refreshToken) {

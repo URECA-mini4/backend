@@ -47,14 +47,19 @@ public class AuthenticationService {
 
     public void logout(String json) {
         try {
-            // JSON에서 accessToken 추출
+            // JSON에서 accessToken 및 refreshToken 추출
             String accessToken = jwtUtil.extractTokenFromJson(json, "accessToken");
+            String refreshToken = jwtUtil.extractTokenFromJson(json, "refreshToken");
 
             // accessToken의 만료 시간 계산
             Long expiration = jwtUtil.getClaims(accessToken, null).getExpiration().getTime() - System.currentTimeMillis();
 
             // Redis에 accessToken을 블랙리스트로 등록 (expiration 기간 동안)
             redisTemplate.opsForValue().set(accessToken, true, expiration, TimeUnit.MILLISECONDS);
+
+            // Redis에서 refreshToken 삭제
+            redisTemplate.delete(refreshToken);
+
         } catch (Exception e) {
             System.err.println("Invalid JWT token: " + json);
             throw new RuntimeException("Invalid token", e);
