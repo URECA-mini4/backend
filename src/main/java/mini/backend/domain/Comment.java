@@ -11,8 +11,8 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 public class Comment extends BaseTimeEntity{
 
     @Id
@@ -28,7 +28,7 @@ public class Comment extends BaseTimeEntity{
     private Post post;
 
     private String content;
-
+  
     public void editContent(String content){
         this.content = content;
     }
