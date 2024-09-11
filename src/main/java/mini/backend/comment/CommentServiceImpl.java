@@ -5,6 +5,7 @@ import mini.backend.domain.Comment;
 import mini.backend.domain.Post;
 import mini.backend.domain.User;
 import mini.backend.post.PostRepository;
+import mini.backend.user.UserDtoRes;
 import mini.backend.user.UserRepository;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
@@ -56,12 +57,19 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 postId: " + postId));
 
         //Post에 해당하는 댓글 조회
-        List<Comment> comments = post.getComments(); //댓글 없으면 빈 리스트 넘기기
-
         //Comment -> CommentDtoRes 변환
-        return comments.stream()
-                .map(comment -> new CommentDtoRes(comment))
+        List<CommentDtoRes> commentList = post.getComments().stream()
+                .map(comment -> new CommentDtoRes(
+                        comment.getCommentId(),
+                        comment.getContent(),
+                        new UserDtoRes(
+                                comment.getUser().getUserId(),
+                                comment.getUser().getId(),
+                                comment.getUser().getName())
+                ))
                 .collect(Collectors.toList());
+
+        return commentList;
     }
 
     //PATCH
