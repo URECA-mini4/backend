@@ -20,8 +20,7 @@ public class PostController {
 
     @Operation(summary = "게시물 생성", description = "사용자가 게시물을 생성합니다.")
     @PostMapping("/posts")
-    public ResponseEntity<PostDetailDtoRes> createPost(Long userId, @RequestParam("title") String title, @RequestParam("content") String content) {
-        PostDtoReq postDtoReq = new PostDtoReq(title, content);
+    public ResponseEntity<PostDetailDtoRes> createPost(Long userId, @RequestBody PostDtoReq postDtoReq) {
         Long createdPostId = postService.create(userId,postDtoReq);
         PostDetailDtoRes createdPost = postService.getPost(createdPostId);
 
@@ -47,9 +46,8 @@ public class PostController {
     @Operation(summary = "게시물 수정", description = "게시물을 수정합니다.")
     @PatchMapping("/posts/{postId}")
     public ResponseEntity<PostDetailDtoRes> updatePost(Long userId, @PathVariable("postId") Long postId
-    , @RequestParam("title") String title, @RequestParam("content") String content){
-        PostDtoReq updatePostDtoReq = new PostDtoReq(title, content);
-        postService.update(userId, postId, updatePostDtoReq);
+    , @RequestBody PostDtoReq postDtoReq){
+        postService.update(userId, postId, postDtoReq);
 
         PostDetailDtoRes updatePost = postService.getPost(postId);
 
