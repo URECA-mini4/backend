@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Tag(name = "게시물", description = "게시물 관련 API")
 @RequestMapping("/api/v1/")
