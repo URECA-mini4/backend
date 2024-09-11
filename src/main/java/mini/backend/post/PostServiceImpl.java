@@ -28,7 +28,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostBaseDtoRes> getPostList() {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAllOrderByCreatedDateDesc();
         return posts.stream()
                 .map(post -> new PostBaseDtoRes(
                         post.getPostId(),
@@ -48,16 +48,7 @@ public class PostServiceImpl implements PostService{
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다. id=" + postId));
 
-        List<CommentDtoRes> commentList = post.getComments().stream()
-                .map(comment -> new CommentDtoRes(
-                        comment.getCommentId(),
-                        comment.getContent(),
-                        new UserDtoRes(
-                                comment.getUser().getUserId(),
-                                comment.getUser().getId(),
-                                comment.getUser().getName())
-                ))
-                .collect(Collectors.toList());
+        List<CommentDtoRes> commentList = commentService.findByPostId(postId);
 
         UserDtoRes userInfo = new UserDtoRes(
                 post.getUser().getUserId()
@@ -74,7 +65,6 @@ public class PostServiceImpl implements PostService{
                 , commentList
         );
     }
-
 
     @Override
     public Long create(Long userId, PostDtoReq postDtoReq) {

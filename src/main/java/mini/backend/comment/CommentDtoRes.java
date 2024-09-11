@@ -14,15 +14,10 @@ import java.sql.Timestamp;
 public class CommentDtoRes {
     private final Long commentId;
     private final String content;
-    private final UserDtoRes userInfo;
+    private UserDtoRes userInfo;
 
     public CommentDtoRes(Comment comment) {
         this.commentId = comment.getCommentId();
         this.content = comment.getContent();
-        this.userInfo = new UserDtoRes(
-                comment.getUser().getUserId(),
-                comment.getUser().getId(),
-                comment.getUser().getName()
-                );
     }
 }
