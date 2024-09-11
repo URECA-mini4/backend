@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ public class PostController {
     public String createPost(Long userId, @RequestBody PostDtoReq postDtoReq) {
         // Long userId = (Long) session.getAttribute("userId"); -> 세션에서 가져오는 경우
         // Long userId = Long.parseLong(principal.getName()); -> spring security 사용하는 경우
-        userId = 6L; // 일단 하드코딩 해놨음
+        userId = 5L; // 일단 하드코딩 해놨음
         Long createdPostId = postService.create(userId, postDtoReq);
         PostDetailDtoRes createdPost = postService.getPost(createdPostId);
 
@@ -36,9 +37,17 @@ public class PostController {
     //게시물 목록 조회
     @Operation(summary = "게시물 목록 조회", description = "전체 게시물 목록을 조회합니다.")
     @GetMapping("/posts")
-    public String getPostList(Model model) {
-        List<PostBaseDtoRes> postList = postService.getPostList();
-        model.addAttribute("posts", postList);
+    public String getPostList(@RequestParam(defaultValue = "1") int page, Model model) {
+        int pageSize = 10;
+
+        int pageNumber = Math.max(page - 1, 0);
+
+        Page<PostBaseDtoRes> postPage = postService.getPostList(pageNumber,pageSize);
+        model.addAttribute("posts", postPage.getContent());
+        model.addAttribute("currentPage", pageNumber + 1);
+        model.addAttribute("totalPages", postPage.getTotalPages());
+        model.addAttribute("hasNext", postPage.hasNext());
+        model.addAttribute("hasPrevious", postPage.hasPrevious());
 
         return "post-list";
     }

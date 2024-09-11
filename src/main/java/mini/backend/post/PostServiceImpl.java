@@ -10,6 +10,10 @@ import mini.backend.domain.User;
 import mini.backend.user.UserDtoRes;
 import mini.backend.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,20 +31,20 @@ public class PostServiceImpl implements PostService{
     private final CommentService commentService;
 
     @Override
-    public List<PostBaseDtoRes> getPostList() {
-        List<Post> posts = postRepository.findAllOrderByCreatedDateDesc();
-        return posts.stream()
-                .map(post -> new PostBaseDtoRes(
-                        post.getPostId(),
-                        post.getTitle(),
-                        post.isAnnounce(),
-                        new UserDtoRes(
-                                post.getUser().getUserId(),
-                                post.getUser().getId(),
-                                post.getUser().getName()
-                        )
-                ))
-                .collect(Collectors.toList());
+    public Page<PostBaseDtoRes> getPostList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<Post> posts = postRepository.findAll(pageable);
+
+        return posts.map(post -> new PostBaseDtoRes(
+                post.getPostId(),
+                post.getTitle(),
+                post.isAnnounce(),
+                new UserDtoRes(
+                        post.getUser().getUserId(),
+                        post.getUser().getId(),
+                        post.getUser().getName()
+                )
+        ));
     }
 
     @Override
