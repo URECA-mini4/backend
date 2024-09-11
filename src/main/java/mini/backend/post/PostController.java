@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -15,34 +16,46 @@ import java.util.List;
 @Tag(name = "게시물", description = "게시물 관련 API")
 @RequestMapping("/api/v1/")
 public class PostController {
-    @Autowired
-    private PostService postService;
 
+    private final PostService postService;
+
+    //게시물 생성
     @Operation(summary = "게시물 생성", description = "사용자가 게시물을 생성합니다.")
     @PostMapping("/posts")
-    public ResponseEntity<PostDetailDtoRes> createPost(Long userId, @RequestBody PostDtoReq postDtoReq) {
-        Long createdPostId = postService.create(userId,postDtoReq);
+    public String createPost(Long userId, @RequestBody PostDtoReq postDtoReq) {
+        // Long userId = (Long) session.getAttribute("userId"); -> 세션에서 가져오는 경우
+        // Long userId = Long.parseLong(principal.getName()); -> spring security 사용하는 경우
+        userId = 6L; // 일단 하드코딩 해놨음
+        Long createdPostId = postService.create(userId, postDtoReq);
         PostDetailDtoRes createdPost = postService.getPost(createdPostId);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
+        return "redirect:/api/v1/posts/" + createdPostId;
+
     }
 
+    //게시물 목록 조회
     @Operation(summary = "게시물 목록 조회", description = "전체 게시물 목록을 조회합니다.")
     @GetMapping("/posts")
-    public ResponseEntity<List<PostBaseDtoRes>> getPostList() {
+    public String getPostList(Model model) {
         List<PostBaseDtoRes> postList = postService.getPostList();
+        model.addAttribute("posts", postList);
 
-        return ResponseEntity.ok(postList);
+        return "post-list";
     }
 
+    //게시물 상세 조회
     @Operation(summary = "게시물 상세 조회", description = "게시물 상세 목록을 조회합니다.")
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostDetailDtoRes> getPost(@PathVariable("postId") Long postId) {
-        PostDetailDtoRes post = postService.getPost(postId);
+    public String getPost(@PathVariable("postId") Long postId, Model model) {
+        PostDetailDtoRes postDetailDtoRes = postService.getPost(postId);
 
-        return ResponseEntity.ok(post);
+        model.addAttribute("post", postDetailDtoRes);
+        model.addAttribute("comments", postDetailDtoRes.getCommentList());
+
+        return "post-detail";
     }
 
+    //아직 안 만듦
     @Operation(summary = "게시물 수정", description = "게시물을 수정합니다.")
     @PatchMapping("/posts/{postId}")
     public ResponseEntity<PostDetailDtoRes> updatePost(Long userId, @PathVariable("postId") Long postId
@@ -54,7 +67,7 @@ public class PostController {
         return ResponseEntity.ok(updatePost);
     }
 
-
+    //아직 안 만듦
     @Operation(summary = "게시물 삭제", description = "게시물을 삭제합니다.")
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<String> postDelete(Long userId, @PathVariable("postId") Long postId) {

@@ -30,12 +30,12 @@
         </ul>
 
         <!-- 댓글 작성 박스 -->
-        <form action="/comments" method="POST">
+        <form id="commentForm">
             <!-- Hidden input to store postId -->
-            <input type="hidden" name="postId" th:value="${postId}">
+            <input type="hidden" id="postId" name="postId" th:value="${post.postId}">
 
-            <textarea name="content" placeholder="댓글을 입력하세요"></textarea>
-            <button type="submit">댓글 등록</button>
+            <textarea id="content" name="content" placeholder="댓글을 입력하세요" required></textarea>
+            <button type="button" onclick="submitComment()">댓글 등록</button>
         </form>
     </section>
 </main>
@@ -43,8 +43,30 @@
 <!-- 헤더의 프로그램명을 클릭하면 /posts 경로로 이동하도록 설정 -->
 <script>
     document.querySelector('header h1').onclick = function() {
-        window.location.href = '/posts';
+        window.location.href = '/api/v1/posts';
     };
+
+    function submitComment() {
+        const form = document.getElementById('commentForm');
+        const formData = new FormData(form);
+
+        fetch('/api/v1/comments', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    const postId = formData.get('postId');
+                    window.location.href = `/api/v1/posts/${postId}`;
+                } else {
+                    alert('댓글 작성 실패');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('댓글 작성 실패');
+            });
+    }
 </script>
 </body>
 </html>

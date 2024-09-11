@@ -13,7 +13,7 @@
 <!-- 글쓰기 폼 -->
 <section class="post-form rounded-box">
     <h2>새 글 작성하기</h2>
-    <form id="postForm" action="/posts" method="post">
+    <form id="postForm">
         <label for="title">제목:</label>
         <input type="text" id="title" name="title" required>
 
@@ -30,12 +30,49 @@
     <ul>
         <!-- Thymeleaf를 사용하여 게시글 목록을 렌더링 -->
         <li th:each="post : ${posts}">
-            <a th:href="@{/posts/{postId}(postId=${post.postId})}">
+            <a th:href="@{/api/v1/posts/{postId}(postId=${post.postId})}">
                 <span th:text="${post.title}">게시글 제목</span>
             </a>
         </li>
     </ul>
 </section>
+
+<!-- JavaScript로 폼 데이터를 JSON으로 변환하여 전송 -->
+<script>
+    document.getElementById('postForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 기본 폼 제출 방지
+
+        // 폼 데이터 가져오기
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+
+        // 데이터 JSON으로 변환
+        const postData = {
+            title: title,
+            content: content
+        };
+
+        // Fetch API를 사용하여 POST 요청 보내기
+        fetch('/api/v1/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postData) // JSON 데이터 전송
+        })
+            .then(response => {
+                if (response.ok) {
+                    // 성공 시 게시물 목록으로 리다이렉트
+                    window.location.href = "/api/v1/posts";
+                } else {
+                    alert('게시물 생성에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
 
 </body>
 </html>
