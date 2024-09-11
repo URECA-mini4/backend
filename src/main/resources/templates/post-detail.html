@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세 보기</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<!-- Include the header -->
+<div th:replace="fragments/header :: header"></div>
+
+<main>
+    <!-- 게시글 내용 박스 -->
+    <section class="post-detail-box rounded-box">
+        <h1 th:text="${post.title}">게시글 제목</h1>
+        <p th:text="${post.content}">게시글 내용</p>
+    </section>
+
+    <!-- 댓글 섹션 박스 -->
+    <section class="comments rounded-box">
+        <div class="comments-header">
+            <h2>댓글</h2>
+        </div>
+        <ul>
+            <!-- Thymeleaf를 사용하여 댓글 목록을 렌더링 -->
+            <li th:each="comment : ${comments}" class="comment-item">
+                <p th:text="${comment.content}">댓글 내용</p>
+            </li>
+        </ul>
+
+        <!-- 댓글 작성 박스 -->
+        <form id="commentForm">
+            <!-- Hidden input to store postId -->
+            <input type="hidden" id="postId" name="postId" th:value="${post.postId}">
+
+            <textarea id="content" name="content" placeholder="댓글을 입력하세요" required></textarea>
+            <button type="button" onclick="submitComment()">댓글 등록</button>
+        </form>
+    </section>
+</main>
+
+<!-- 헤더의 프로그램명을 클릭하면 /posts 경로로 이동하도록 설정 -->
+<script>
+    document.querySelector('header h1').onclick = function() {
+        window.location.href = '/api/v1/posts';
+    };
+
+    function submitComment() {
+        const form = document.getElementById('commentForm');
+        const formData = new FormData(form);
+
+        fetch('/api/v1/comments', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    const postId = formData.get('postId');
+                    window.location.href = `/api/v1/posts/${postId}`;
+                } else {
+                    alert('댓글 작성 실패');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('댓글 작성 실패');
+            });
+    }
+</script>
+</body>
+</html>
