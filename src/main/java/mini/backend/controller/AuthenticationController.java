@@ -22,7 +22,7 @@ public class AuthenticationController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody String tokens) {
-        authenticationService.logout(tokens); // accessToken과 refreshToken 모두 처리
+        authenticationService.logout(tokens);
         return ResponseEntity.ok("Successfully logged out");
     }
 

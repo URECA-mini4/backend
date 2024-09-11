@@ -1,20 +1,19 @@
 package mini.backend.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.nio.file.FileStore;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class User extends BaseTimeEntity{
 
     @Id

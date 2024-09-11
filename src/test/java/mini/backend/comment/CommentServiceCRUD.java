@@ -83,7 +83,7 @@ public class CommentServiceCRUD {
         Comment savedComment = commentRepository.findById(commentId).orElseThrow();
 
         //when
-        commentService.deleteOne(commentId);
+        commentService.deleteOne(commentId, testUser.getUserId());
 
         //then
         Optional<Comment> deletedComment = commentRepository.findById(commentId);

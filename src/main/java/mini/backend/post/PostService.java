@@ -11,12 +11,12 @@ public interface PostService {
     PostDetailDtoRes getPost(Long postId);
 
     // 생성
-    PostDetailDtoRes create(Long userId, PostDtoReq postDtoReq);
+    Long create(Long userId, PostDtoReq postDtoReq);
 
     // 수정
-    PostDetailDtoRes update(Long userId, PostDtoReq postDtoReq);
+    void update(Long userId, Long postId, PostDtoReq postDtoReq);
 
     // 삭제
-    void delete(Long postId);
+    void delete(Long userId, Long postId);
 
 }
