@@ -10,6 +10,10 @@ import mini.backend.domain.User;
 import mini.backend.user.UserDtoRes;
 import mini.backend.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,9 +31,12 @@ public class PostServiceImpl implements PostService{
     private final CommentService commentService;
 
     @Override
-    public List<PostBaseDtoRes> getPostList() {
-        List<Post> posts = postRepository.findAllOrderByCreatedDateDesc();
-        return posts.stream()
+    public List<PostBaseDtoRes> getPostList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<Post> postPage = postRepository.findAll(pageable);
+
+        // 각 Post 객체를 dto 타입으로 변환 후 Page<Post>에서 List<Post>로 반환
+        List<PostBaseDtoRes> postList = postPage.stream()
                 .map(post -> new PostBaseDtoRes(
                         post.getPostId(),
                         post.getTitle(),
@@ -41,6 +48,8 @@ public class PostServiceImpl implements PostService{
                         )
                 ))
                 .collect(Collectors.toList());
+
+        return postList;
     }
 
     @Override

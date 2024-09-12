@@ -174,3 +174,27 @@ a:hover {
 .comment-form-box button:hover {
     background-color: #0056b3;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+    list-style: none;
+}
+.pagination .page-item {
+    margin: 0 2px;
+}
+.pagination .page-link {
+    padding: 0.5rem 1rem;
+}
+.pagination .active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+/*.pagination .disabled .page-link {*/
+/*    pointer-events: none;*/
+/*    color: #6c757d;*/
+/*    background-color: #fff;*/
+/*    border-color: #dee2e6;*/
+/*}*/

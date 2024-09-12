@@ -3,15 +3,14 @@ package mini.backend.post;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Tag(name = "게시물", description = "게시물 관련 API")
 @RequestMapping("/api/v1/")
@@ -19,43 +18,38 @@ public class PostController {
 
     private final PostService postService;
 
-    //게시물 생성
+    // 게시물 생성
     @Operation(summary = "게시물 생성", description = "사용자가 게시물을 생성합니다.")
     @PostMapping("/posts")
-    public String createPost(Long userId, @RequestBody PostDtoReq postDtoReq) {
-        // Long userId = (Long) session.getAttribute("userId"); -> 세션에서 가져오는 경우
-        // Long userId = Long.parseLong(principal.getName()); -> spring security 사용하는 경우
-        userId = 6L; // 일단 하드코딩 해놨음
+    public ResponseEntity<PostDetailDtoRes> createPost(Long userId, @RequestBody PostDtoReq postDtoReq){
         Long createdPostId = postService.create(userId, postDtoReq);
         PostDetailDtoRes createdPost = postService.getPost(createdPostId);
 
-        return "redirect:/api/v1/posts/" + createdPostId;
-
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
     }
 
-    //게시물 목록 조회
+    // 게시물 목록 조회
     @Operation(summary = "게시물 목록 조회", description = "전체 게시물 목록을 조회합니다.")
     @GetMapping("/posts")
-    public String getPostList(Model model) {
-        List<PostBaseDtoRes> postList = postService.getPostList();
-        model.addAttribute("posts", postList);
+    public ResponseEntity<List<PostBaseDtoRes>> getPostList(@RequestParam(defaultValue = "1") int page) {
+        int pageSize = 10;
+        int pageNumber = Math.max(page - 1, 0);
 
-        return "post-list";
+        List<PostBaseDtoRes> postList = postService.getPostList(pageNumber,pageSize);
+
+        return ResponseEntity.ok(postList);
     }
 
-    //게시물 상세 조회
+    // 게시물 상세 조회
     @Operation(summary = "게시물 상세 조회", description = "게시물 상세 목록을 조회합니다.")
     @GetMapping("/posts/{postId}")
-    public String getPost(@PathVariable("postId") Long postId, Model model) {
+    public ResponseEntity<PostDetailDtoRes> getPost(@PathVariable Long postId) {
         PostDetailDtoRes postDetailDtoRes = postService.getPost(postId);
 
-        model.addAttribute("post", postDetailDtoRes);
-        model.addAttribute("comments", postDetailDtoRes.getCommentList());
-
-        return "post-detail";
+        return ResponseEntity.ok(postDetailDtoRes);
     }
 
-    //아직 안 만듦
+    // 게시물 수정
     @Operation(summary = "게시물 수정", description = "게시물을 수정합니다.")
     @PatchMapping("/posts/{postId}")
     public ResponseEntity<PostDetailDtoRes> updatePost(Long userId, @PathVariable("postId") Long postId
@@ -67,7 +61,7 @@ public class PostController {
         return ResponseEntity.ok(updatePost);
     }
 
-    //아직 안 만듦
+    // 게시물 삭제
     @Operation(summary = "게시물 삭제", description = "게시물을 삭제합니다.")
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<String> postDelete(Long userId, @PathVariable("postId") Long postId) {

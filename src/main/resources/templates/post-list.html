@@ -35,6 +35,40 @@
             </a>
         </li>
     </ul>
+
+    <!-- 페이지 네비게이션 -->
+    <div th:if="${totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <!-- 이전 페이지 버튼 -->
+            <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                <a class="page-link" th:if="${currentPage > 1}" th:href="@{|/api/v1/posts?page=${currentPage - 1}|}">
+                    <span>이전</span>
+                </a>
+            </li>
+
+            <!-- 페이지 번호 버튼들 -->
+            <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                th:if="${pageNum >= currentPage - 5 && pageNum <= currentPage + 5}"
+                th:classappend="${pageNum == currentPage - 1 ? 'active' : ''}"
+                class="page-item">
+                <a class="page-link" th:text="${pageNum + 1}"
+                   th:href="@{|/api/v1/posts?page=${pageNum + 1}|}">
+                    <span th:text="${pageNum + 1}">페이지 번호</span>
+                </a>
+            </li>
+
+            <!-- 다음 페이지 버튼 -->
+            <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+                <a class="page-link" th:if="${currentPage < totalPages}" th:href="@{|/api/v1/posts?page=${currentPage + 1}|}">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div th:if="${posts.isEmpty()}">
+        <span> 등록된 게시물이 없습니다.</span>
+    </div>
 </section>
 
 <!-- JavaScript로 폼 데이터를 JSON으로 변환하여 전송 -->
