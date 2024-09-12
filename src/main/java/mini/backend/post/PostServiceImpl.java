@@ -31,20 +31,25 @@ public class PostServiceImpl implements PostService{
     private final CommentService commentService;
 
     @Override
-    public Page<PostBaseDtoRes> getPostList(int page, int size) {
+    public List<PostBaseDtoRes> getPostList(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<Post> posts = postRepository.findAll(pageable);
+        Page<Post> postPage = postRepository.findAll(pageable);
 
-        return posts.map(post -> new PostBaseDtoRes(
-                post.getPostId(),
-                post.getTitle(),
-                post.isAnnounce(),
-                new UserDtoRes(
-                        post.getUser().getUserId(),
-                        post.getUser().getId(),
-                        post.getUser().getName()
-                )
-        ));
+        // 각 Post 객체를 dto 타입으로 변환 후 Page<Post>에서 List<Post>로 반환
+        List<PostBaseDtoRes> postList = postPage.stream()
+                .map(post -> new PostBaseDtoRes(
+                        post.getPostId(),
+                        post.getTitle(),
+                        post.isAnnounce(),
+                        new UserDtoRes(
+                                post.getUser().getUserId(),
+                                post.getUser().getId(),
+                                post.getUser().getName()
+                        )
+                ))
+                .collect(Collectors.toList());
+
+        return postList;
     }
 
     @Override

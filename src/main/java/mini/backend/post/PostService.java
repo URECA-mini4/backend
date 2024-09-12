@@ -8,7 +8,7 @@ import java.util.List;
 public interface PostService {
 
     // 목록 조회
-    Page<PostBaseDtoRes> getPostList(int page, int size);
+    List<PostBaseDtoRes> getPostList(int page, int size);
 
     // 상세 조회
     PostDetailDtoRes getPost(Long postId);
