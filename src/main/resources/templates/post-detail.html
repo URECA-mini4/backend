@@ -32,7 +32,7 @@
         <!-- 댓글 작성 박스 -->
         <form id="commentForm">
             <!-- Hidden input to store postId -->
-            <input type="hidden" id="postId" name="postId" th:value="${post.postId}">
+            <input type="hidden" id="postId" th:value="${post.postId}">
 
             <textarea id="content" name="content" placeholder="댓글을 입력하세요" required></textarea>
             <button type="button" onclick="submitComment()">댓글 등록</button>
@@ -47,19 +47,26 @@
     };
 
     function submitComment() {
-        const form = document.getElementById('commentForm');
-        const formData = new FormData(form);
+        const postId = document.getElementById('postId').value;
+        const content = document.getElementById('content').value;
+
+        const data = {
+            postId: postId,
+            content: content
+        };
 
         fetch('/api/v1/comments', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         })
             .then(response => {
                 if (response.ok) {
-                    const postId = formData.get('postId');
                     window.location.href = `/api/v1/posts/${postId}`;
                 } else {
-                    alert('댓글 작성 실패');
+                    alert('댓글 작성 실패!!!!!');
                 }
             })
             .catch(error => {
