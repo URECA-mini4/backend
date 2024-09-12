@@ -11,3 +11,9 @@ services:
       MYSQL_USER: mini4
       MYSQL_PASSWORD: 1234
       MYSQL_ROOT_PASSWORD: 1234
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
