@@ -1,6 +1,6 @@
 package mini.backend.config;
 
-import mini.backend.security.JwtAuthenticationFilter;
+import mini.backend.auth.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

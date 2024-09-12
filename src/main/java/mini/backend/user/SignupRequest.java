@@ -1,4 +1,4 @@
-package mini.backend.model;
+package mini.backend.user;
 
 public class SignupRequest {
     private String id;

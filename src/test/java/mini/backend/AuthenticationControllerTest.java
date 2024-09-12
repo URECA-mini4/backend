@@ -1,8 +1,8 @@
 package mini.backend;
 
-import mini.backend.model.AuthenticationRequest;
-import mini.backend.security.JwtUtil;
-import mini.backend.service.MyUserDetailsService;
+import mini.backend.auth.AuthenticationRequest;
+import mini.backend.auth.JwtUtil;
+import mini.backend.user.MyUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -45,9 +45,9 @@ public class AuthenticationControllerTest {
     @BeforeEach
     public void setUp() {
         // 테스트 데이터 설정
-        authenticationRequest = new AuthenticationRequest("testUser", "testPassword");
+        authenticationRequest = new AuthenticationRequest(1L, "testPassword");
         mockUser = User.builder()
-                .username("testUser")
+                .username("1")
                 .password("testPassword")
                 .roles("USER")
                 .build();
@@ -59,13 +59,13 @@ public class AuthenticationControllerTest {
         when(authenticationManager.authenticate(Mockito.any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(new UsernamePasswordAuthenticationToken(mockUser, null, mockUser.getAuthorities()));
 
-        when(userDetailsService.loadUserByUsername(anyString())).thenReturn(mockUser);
+        when(userDetailsService.loadUserById(1L)).thenReturn(mockUser);
 
         when(jwtUtil.createJwt(anyString(), anyString(), Mockito.anyLong())).thenReturn("fakeToken");
 
         String jsonRequest = """
             {
-                "username": "testUser",
+                "username": "1",
                 "password": "testPassword"
             }
         """;

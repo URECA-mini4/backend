@@ -1,14 +1,12 @@
 package mini.backend;
 
-import mini.backend.model.AuthenticationRequest;
-import mini.backend.model.AuthenticationResponse;
-import mini.backend.security.JwtUtil;
-import mini.backend.service.AuthenticationService;
-import mini.backend.service.MyUserDetailsService;
+import mini.backend.auth.AuthenticationResponse;
+import mini.backend.auth.JwtUtil;
+import mini.backend.auth.AuthenticationService;
+import mini.backend.user.MyUserDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,16 +24,16 @@ public class AuthenticationServiceTest {
 
     @Test
     public void testJwtCreationAndValidation() {
-        String username = "user123";
+        String userId = "1";
         String role = "USER";
         Long expirationMs = 1000L * 60 * 60; // 1 hour
 
         // Create JWT
-        String token = jwtUtil.createJwt(username, role, expirationMs);
+        String token = jwtUtil.createJwt(userId, role, expirationMs);
 
         // Validate JWT
         assertNotNull(token);
-        assertEquals(username, jwtUtil.getLoginId(token));
+        assertEquals(userId, jwtUtil.getUserId(token));
         assertEquals(role, jwtUtil.getRole(token));
         assertFalse(jwtUtil.isExpired(token));
     }
@@ -43,10 +41,10 @@ public class AuthenticationServiceTest {
     @Test
     public void testRefreshToken() {
         // Given
-        String username = "user123";
+        String userId = "1";
         String role = "USER";
         Long expirationMs = 1000L * 60 * 60; // 1 hour
-        String refreshToken = jwtUtil.createJwt(username, role, expirationMs * 24 * 7); // 7 days
+        String refreshToken = jwtUtil.createJwt(userId, role, expirationMs * 24 * 7); // 7 days
 
         // When
         AuthenticationResponse response = authenticationService.refreshToken(refreshToken);

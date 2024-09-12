@@ -1,23 +1,23 @@
-package mini.backend.model;
+package mini.backend.auth;
 
 public class AuthenticationRequest {
-    private String username;
+    private Long userId;
     private String password;
 
     public AuthenticationRequest() {
     }
 
-    public AuthenticationRequest(String username, String password) {
-        this.username = username;
+    public AuthenticationRequest(Long userId, String password) {
+        this.userId = userId;
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getPassword() {
@@ -28,3 +28,4 @@ public class AuthenticationRequest {
         this.password = password;
     }
 }
+

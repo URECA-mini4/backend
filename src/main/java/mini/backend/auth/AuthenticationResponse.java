@@ -1,4 +1,4 @@
-package mini.backend.model;
+package mini.backend.auth;
 
 public class AuthenticationResponse {
     private String accessToken;

@@ -1,8 +1,5 @@
-package mini.backend.controller;
+package mini.backend.auth;
 
-import mini.backend.model.AuthenticationRequest;
-import mini.backend.model.AuthenticationResponse;
-import mini.backend.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

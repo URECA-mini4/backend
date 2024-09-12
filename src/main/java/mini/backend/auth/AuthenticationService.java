@@ -1,9 +1,6 @@
-package mini.backend.service;
+package mini.backend.auth;
 
-import mini.backend.model.AuthenticationRequest;
-import mini.backend.model.AuthenticationResponse;
-import mini.backend.security.JwtUtil;
-import org.json.JSONObject;
+import mini.backend.user.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,20 +24,28 @@ public class AuthenticationService {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate; // RedisTemplate 사용
+
+    private static final String REDIS_LOGOUT_KEY = "BLACKLISTED_TOKEN:";
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws Exception {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUserId(), authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String accessToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
-        final String refreshToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60 * 24 * 7);
+        final UserDetails userDetails = userDetailsService.loadUserById(authenticationRequest.getUserId());
+        final String accessToken = jwtUtil.createJwt(String.valueOf(userDetails.getUsername()), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
+
+        // 로그인 시 블랙리스트 조회
+        if (isTokenBlacklisted(accessToken)) {
+            throw new Exception("The user is blacklisted. Please contact support.");
+        }
+
+        final String refreshToken = jwtUtil.createJwt(String.valueOf(userDetails.getUsername()), userDetails.getAuthorities().toString(), 1000L * 60 * 60 * 24 * 7);
 
         return new AuthenticationResponse(accessToken, refreshToken);
     }
@@ -55,7 +60,7 @@ public class AuthenticationService {
             Long expiration = jwtUtil.getClaims(accessToken, null).getExpiration().getTime() - System.currentTimeMillis();
 
             // Redis에 accessToken을 블랙리스트로 등록 (expiration 기간 동안)
-            redisTemplate.opsForValue().set(accessToken, true, expiration, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set(REDIS_LOGOUT_KEY + accessToken, true, expiration, TimeUnit.MILLISECONDS);
 
             // Redis에서 refreshToken 삭제
             redisTemplate.delete(refreshToken);
@@ -77,8 +82,8 @@ public class AuthenticationService {
             }
 
             // 사용자 정보와 새 Access Token 생성
-            String username = jwtUtil.getLoginId(refreshToken);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            String userId = jwtUtil.getUserId(refreshToken);
+            UserDetails userDetails = userDetailsService.loadUserById(Long.parseLong(userId));
             String newAccessToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
 
             return new AuthenticationResponse(newAccessToken, refreshToken);
@@ -87,5 +92,10 @@ public class AuthenticationService {
             throw new RuntimeException("Invalid refresh token request", e);
         }
     }
+
+    // 블랙리스트 확인 메서드
+    private boolean isTokenBlacklisted(String accessToken) {
+        Boolean isBlacklisted = (Boolean) redisTemplate.opsForValue().get(REDIS_LOGOUT_KEY + accessToken);
+        return isBlacklisted != null && isBlacklisted;
+    }
 }
-// 
