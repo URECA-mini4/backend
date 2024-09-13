@@ -1,5 +1,6 @@
 package mini.backend;
 
+import mini.backend.auth.AuthenticationFacade;
 import mini.backend.auth.AuthenticationRequest;
 import mini.backend.auth.JwtUtil;
 import mini.backend.user.MyUserDetailsService;
@@ -39,15 +40,17 @@ public class AuthenticationControllerTest {
     @MockBean
     private JwtUtil jwtUtil;
 
+    @MockBean
+    private AuthenticationFacade authenticationFacade;
+
     private AuthenticationRequest authenticationRequest;
     private UserDetails mockUser;
 
     @BeforeEach
     public void setUp() {
-        // 테스트 데이터 설정
-        authenticationRequest = new AuthenticationRequest(1L, "testPassword");
+        authenticationRequest = new AuthenticationRequest("testUser", "testPassword");
         mockUser = User.builder()
-                .username("1")
+                .username("testUser")
                 .password("testPassword")
                 .roles("USER")
                 .build();
@@ -55,45 +58,50 @@ public class AuthenticationControllerTest {
 
     @Test
     public void testLoginSuccess() throws Exception {
-
+        // Mock login process
         when(authenticationManager.authenticate(Mockito.any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(new UsernamePasswordAuthenticationToken(mockUser, null, mockUser.getAuthorities()));
 
-        when(userDetailsService.loadUserById(1L)).thenReturn(mockUser);
+        when(userDetailsService.loadUserByUsername("testUser")).thenReturn(mockUser);
 
         when(jwtUtil.createJwt(anyString(), anyString(), Mockito.anyLong())).thenReturn("fakeToken");
 
-        String jsonRequest = """
+        String loginRequest = """
             {
-                "username": "1",
+                "username": "testUser",
                 "password": "testPassword"
             }
         """;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
+        // Perform login and get accessToken
+        String loginResponse = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest))
-                .andExpect(status().isOk()) // HTTP 200 상태 확인
+                        .content(loginRequest))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").exists())
-                .andExpect(jsonPath("$.refreshToken").exists());
+                .andExpect(jsonPath("$.refreshToken").exists())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        // Extract the accessToken from the response
+        String accessToken = extractTokenFromResponse(loginResponse, "accessToken");
+
+        // Mock getAuthentication to return userId
+        Long mockUserId = 1L;
+        when(authenticationFacade.getAuthentication()).thenReturn(mockUserId);
+
+        // Log the value of getAuthentication
+        System.out.println("Mocked userId from getAuthentication: " + authenticationFacade.getAuthentication());
+
     }
 
-//    @Test
-//    public void testLoginFailure() throws Exception {
-//        // 자격증명 실패 시, 예외 처리
-//        when(authenticationManager.authenticate(Mockito.any(UsernamePasswordAuthenticationToken.class)))
-//                .thenThrow(new RuntimeException("Incorrect username or password"));
-//
-//        String jsonRequest = """
-//            {
-//                "username": "wrongUser",
-//                "password": "wrongPassword"
-//            }
-//        """;
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(jsonRequest))
-//                .andExpect(status().isUnauthorized()); // 인증 실패 시 HTTP 401 상태 확인
-//    }
+    private String extractTokenFromResponse(String response, String tokenField) {
+        try {
+            org.json.JSONObject jsonResponse = new org.json.JSONObject(response);
+            return jsonResponse.getString(tokenField);
+        } catch (org.json.JSONException e) {
+            throw new RuntimeException("Error parsing JSON response", e);
+        }
+    }
 }

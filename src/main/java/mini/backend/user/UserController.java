@@ -7,14 +7,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("/api/v1")
 public class UserController {
 
     @Autowired
     private UserService userService;
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userId =  (String)authentication.getPrincipal();
 
     @PostMapping("/users")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {

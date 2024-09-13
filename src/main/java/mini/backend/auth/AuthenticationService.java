@@ -24,6 +24,9 @@ public class AuthenticationService {
     private JwtUtil jwtUtil;
 
     @Autowired
+    private AuthenticationFacade authenticationFacade;
+
+    @Autowired
     private RedisTemplate<String, Object> redisTemplate; // RedisTemplate 사용
 
     private static final String REDIS_LOGOUT_KEY = "BLACKLISTED_TOKEN:";
@@ -31,13 +34,13 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws Exception {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUserId(), authenticationRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserById(authenticationRequest.getUserId());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String accessToken = jwtUtil.createJwt(String.valueOf(userDetails.getUsername()), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
 
         // 로그인 시 블랙리스트 조회
@@ -82,10 +85,10 @@ public class AuthenticationService {
             }
 
             // 사용자 정보와 새 Access Token 생성
-            String userId = jwtUtil.getUserId(refreshToken);
-            UserDetails userDetails = userDetailsService.loadUserById(Long.parseLong(userId));
+            String username = jwtUtil.getLoginId(refreshToken);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             String newAccessToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
-
+            authenticationFacade.getAuthentication();
             return new AuthenticationResponse(newAccessToken, refreshToken);
         } catch (Exception e) {
             e.printStackTrace();

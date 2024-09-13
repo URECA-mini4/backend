@@ -23,8 +23,8 @@ public class JwtUtil {
         this.secretKey = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
-    public String getUserId(String token) {
-        return getClaims(token, null).get("UserId", String.class);
+    public String getLoginId(String token) {
+        return getClaims(token, null).get("loginId", String.class);
     }
 
     public String getRole(String token) {
@@ -35,9 +35,9 @@ public class JwtUtil {
         return getClaims(token, null).getExpiration().before(new Date());
     }
 
-    public String createJwt(String UserId, String role, Long expiredMs) {
+    public String createJwt(String loginId, String role, Long expiredMs) {
         String token = Jwts.builder()
-                .claim("UserId", UserId)
+                .claim("loginId", loginId)
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiredMs))

@@ -24,16 +24,16 @@ public class AuthenticationServiceTest {
 
     @Test
     public void testJwtCreationAndValidation() {
-        String userId = "1";
+        String username = "testUser";
         String role = "USER";
         Long expirationMs = 1000L * 60 * 60; // 1 hour
 
         // Create JWT
-        String token = jwtUtil.createJwt(userId, role, expirationMs);
+        String token = jwtUtil.createJwt(username, role, expirationMs);
 
         // Validate JWT
         assertNotNull(token);
-        assertEquals(userId, jwtUtil.getUserId(token));
+        assertEquals(username, jwtUtil.getLoginId(token));
         assertEquals(role, jwtUtil.getRole(token));
         assertFalse(jwtUtil.isExpired(token));
     }
@@ -41,7 +41,7 @@ public class AuthenticationServiceTest {
     @Test
     public void testRefreshToken() {
         // Given
-        String userId = "1";
+        String userId = "testUser";
         String role = "USER";
         Long expirationMs = 1000L * 60 * 60; // 1 hour
         String refreshToken = jwtUtil.createJwt(userId, role, expirationMs * 24 * 7); // 7 days

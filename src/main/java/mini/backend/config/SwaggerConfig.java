@@ -17,13 +17,7 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("mini4 api")
                         .version("1.0")
-                        .description("mini4 api document"))
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
-                .components(new io.swagger.v3.oas.models.Components()
-                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
-                                .type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT")));
+                        .description("mini4 api document"));
     }
 
     @Bean

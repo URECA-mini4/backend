@@ -30,12 +30,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = getTokenFromRequest(request);
 
         if (token != null && !jwtUtil.isExpired(token)) {
-            String userId = jwtUtil.getUserId(token);
+            String loginId = jwtUtil.getLoginId(token);
             String role = jwtUtil.getRole(token);
 
             // 사용자 인증 로직
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userId, null, getAuthorities(role));
+                    new UsernamePasswordAuthenticationToken(loginId, null, getAuthorities(role));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

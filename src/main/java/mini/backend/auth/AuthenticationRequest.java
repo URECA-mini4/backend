@@ -1,23 +1,23 @@
 package mini.backend.auth;
 
 public class AuthenticationRequest {
-    private Long userId;
+    private String username;
     private String password;
 
     public AuthenticationRequest() {
     }
 
-    public AuthenticationRequest(Long userId, String password) {
-        this.userId = userId;
+    public AuthenticationRequest(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
