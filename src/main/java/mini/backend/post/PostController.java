@@ -3,6 +3,8 @@ package mini.backend.post;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import mini.backend.auth.AuthenticationFacade;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,10 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+
+    @Autowired
+    private AuthenticationFacade authenticationFacade;
+
 
     // 게시물 생성
     @Operation(summary = "게시물 생성", description = "사용자가 게시물을 생성합니다.")
