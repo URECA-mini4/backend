@@ -17,6 +17,10 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public void registerUser(SignupRequest signupRequest) {
+
+        if (userRepository.existsById(signupRequest.getId())) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
 
         User newUser = new User();

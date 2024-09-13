@@ -27,8 +27,9 @@ public class PostController {
     // 게시물 생성
     @Operation(summary = "게시물 생성", description = "사용자가 게시물을 생성합니다.")
     @PostMapping("/posts")
-    public ResponseEntity<PostDetailDtoRes> createPost(Long userId, @RequestBody PostDtoReq postDtoReq){
-        Long createdPostId = postService.create(userId, postDtoReq);
+    public ResponseEntity<PostDetailDtoRes> createPost(@RequestBody PostDtoReq postDtoReq){
+        String Id = authenticationFacade.getAuthentication();
+        Long createdPostId = postService.create(Id, postDtoReq);
         PostDetailDtoRes createdPost = postService.getPost(createdPostId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
@@ -58,9 +59,10 @@ public class PostController {
     // 게시물 수정
     @Operation(summary = "게시물 수정", description = "게시물을 수정합니다.")
     @PatchMapping("/posts/{postId}")
-    public ResponseEntity<PostDetailDtoRes> updatePost(Long userId, @PathVariable("postId") Long postId
+    public ResponseEntity<PostDetailDtoRes> updatePost(@PathVariable("postId") Long postId
     , @RequestBody PostDtoReq postDtoReq){
-        postService.update(userId, postId, postDtoReq);
+        String Id = authenticationFacade.getAuthentication();
+        postService.update(Id, postId, postDtoReq);
 
         PostDetailDtoRes updatePost = postService.getPost(postId);
 
@@ -70,8 +72,9 @@ public class PostController {
     // 게시물 삭제
     @Operation(summary = "게시물 삭제", description = "게시물을 삭제합니다.")
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<String> postDelete(Long userId, @PathVariable("postId") Long postId) {
-        postService.delete(userId, postId);
+    public ResponseEntity<String> postDelete(@PathVariable("postId") Long postId) {
+        String Id = authenticationFacade.getAuthentication();
+        postService.delete(Id, postId);
 
         return ResponseEntity.ok("게시물이 삭제되었습니다.");
     }

@@ -14,11 +14,11 @@ public interface PostService {
     PostDetailDtoRes getPost(Long postId);
 
     // 생성
-    Long create(Long userId, PostDtoReq postDtoReq);
+    Long create(String Id, PostDtoReq postDtoReq);
 
     // 수정
-    void update(Long userId, Long postId, PostDtoReq postDtoReq);
+    void update(String Id, Long postId, PostDtoReq postDtoReq);
 
     // 삭제
-    void delete(Long userId, Long postId);
+    void delete(String Id, Long postId);
 }
