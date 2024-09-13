@@ -3,5 +3,5 @@ package mini.backend.auth;
 import org.springframework.security.core.Authentication;
 
 public interface AuthenticationFacade {
-    Long getAuthentication();
+    String getAuthentication();
 }

@@ -12,9 +12,9 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
     @Autowired
     private UserRepository userRepository;
     @Override
-    public Long getAuthentication(){
+    public String getAuthentication(){
         String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return userRepository.findUserIdByUsername(username);
+        return username;
     }
 }
