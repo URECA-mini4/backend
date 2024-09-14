@@ -1,6 +1,6 @@
 package mini.backend;
 
-import mini.backend.auth.AuthenticationResponse;
+import mini.backend.auth.AuthDtoRes;
 import mini.backend.auth.JwtUtil;
 import mini.backend.auth.AuthenticationService;
 import mini.backend.user.MyUserDetailsService;
@@ -47,7 +47,7 @@ public class AuthenticationServiceTest {
         String refreshToken = jwtUtil.createJwt(userId, role, expirationMs * 24 * 7); // 7 days
 
         // When
-        AuthenticationResponse response = authenticationService.refreshToken(refreshToken);
+        AuthDtoRes response = authenticationService.refreshToken(refreshToken);
 
         // Then
         assertNotNull(response.getAccessToken());

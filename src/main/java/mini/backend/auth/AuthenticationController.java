@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1")
 public class AuthenticationController {
 
     @Autowired
@@ -14,22 +14,22 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationFacade authenticationFacade;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-        AuthenticationResponse response = authenticationService.authenticate(authenticationRequest);
+    @PostMapping("/users/login")
+    public ResponseEntity<?> login(@RequestBody AuthDtoReq authDtoReq) throws Exception {
+        AuthDtoRes response = authenticationService.authenticate(authDtoReq);
         return ResponseEntity.ok(response);
 
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/users/logout")
     public ResponseEntity<?> logout(@RequestBody String tokens) {
         authenticationService.logout(tokens);
         return ResponseEntity.ok("Successfully logged out");
     }
 
-    @PostMapping("/refresh-token")
+    @PostMapping("/users/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody String refreshToken) {
-        AuthenticationResponse response = authenticationService.refreshToken(refreshToken);
+        AuthDtoRes response = authenticationService.refreshToken(refreshToken);
         return ResponseEntity.ok(response);
     }
 }

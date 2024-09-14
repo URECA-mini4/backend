@@ -1,12 +1,12 @@
 package mini.backend.auth;
 
-public class AuthenticationResponse {
+public class AuthDtoRes {
     private String accessToken;
     private String refreshToken;
 
-    public AuthenticationResponse() {}
+    public AuthDtoRes() {}
 
-    public AuthenticationResponse(String accessToken, String refreshToken) {
+    public AuthDtoRes(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }

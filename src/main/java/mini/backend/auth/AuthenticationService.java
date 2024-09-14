@@ -31,16 +31,16 @@ public class AuthenticationService {
 
     private static final String REDIS_LOGOUT_KEY = "BLACKLISTED_TOKEN:";
 
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws Exception {
+    public AuthDtoRes authenticate(AuthDtoReq authDtoReq) throws Exception {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(authDtoReq.getUsername(), authDtoReq.getPassword())
             );
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authDtoReq.getUsername());
         final String accessToken = jwtUtil.createJwt(String.valueOf(userDetails.getUsername()), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
 
         // 로그인 시 블랙리스트 조회
@@ -50,7 +50,7 @@ public class AuthenticationService {
 
         final String refreshToken = jwtUtil.createJwt(String.valueOf(userDetails.getUsername()), userDetails.getAuthorities().toString(), 1000L * 60 * 60 * 24 * 7);
 
-        return new AuthenticationResponse(accessToken, refreshToken);
+        return new AuthDtoRes(accessToken, refreshToken);
     }
 
     public void logout(String json) {
@@ -74,7 +74,7 @@ public class AuthenticationService {
         }
     }
 
-    public AuthenticationResponse refreshToken(String json) {
+    public AuthDtoRes refreshToken(String json) {
         try {
             // JSON에서 refreshToken 추출
             String refreshToken = jwtUtil.extractTokenFromJson(json, "refreshToken");
@@ -89,7 +89,7 @@ public class AuthenticationService {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             String newAccessToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
             authenticationFacade.getAuthentication();
-            return new AuthenticationResponse(newAccessToken, refreshToken);
+            return new AuthDtoRes(newAccessToken, refreshToken);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Invalid refresh token request", e);

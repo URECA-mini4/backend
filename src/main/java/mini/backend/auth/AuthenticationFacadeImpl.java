@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationFacadeImpl implements AuthenticationFacade {
 
-    @Autowired
-    private UserRepository userRepository;
     @Override
     public String getAuthentication(){
         String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
