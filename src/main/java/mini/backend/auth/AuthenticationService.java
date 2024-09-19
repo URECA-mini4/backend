@@ -82,7 +82,6 @@ public class AuthenticationService {
             String username = jwtUtil.getLoginId(refreshToken);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             String newAccessToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
-            authenticationFacade.getAuthentication();
             return new AuthDtoRes(newAccessToken, refreshToken);
         } catch (Exception e) {
             e.printStackTrace();
