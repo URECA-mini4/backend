@@ -26,14 +26,14 @@ public class CommentServiceImpl implements CommentService {
     //POST
     @Override
     @Transactional
-    public Long create(CommentDtoReq commentDtoReq, Long postId, Long userId) {
+    public Long create(CommentDtoReq commentDtoReq, Long postId, String Id) {
         //Post조회
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 postId: " + postId));
 
         //User조회
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 userId: " + userId));
+        User user = userRepository.findById(Id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 userId: " + Id));
 
         //Comment 엔티티 생성
         Comment comment = Comment.builder()
@@ -75,17 +75,17 @@ public class CommentServiceImpl implements CommentService {
     //PATCH
     @Override
     @Transactional
-    public CommentDtoRes update(CommentDtoReq commentDtoReq, Long commentId, Long userId) {
+    public CommentDtoRes update(CommentDtoReq commentDtoReq, Long commentId, String Id) {
         //유저 정보 확인
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 userId: " +userId));
+        User user = userRepository.findById(Id)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 userId: " +Id));
 
         //수정할 댓글 정보 확인
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 commentId: " + commentId));
 
         //댓글 작성자와 수정 요청자 일치 확인
-        if(!comment.getUser().getUserId().equals(userId)) {
+        if(!comment.getUser().getId().equals(Id)) {
             throw new IllegalArgumentException("댓글을 수정할 권한이 없음.");
         }
 
@@ -99,17 +99,17 @@ public class CommentServiceImpl implements CommentService {
     //DELETE
     @Override
     @Transactional
-    public void deleteOne(Long commentId, Long userId) {
+    public void deleteOne(Long commentId, String Id) {
         //유저 정보 확인
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 userId: " +userId));
+        User user = userRepository.findById(Id)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 userId: " +Id));
 
         //수정할 댓글 정보 확인
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 commentId: " + commentId));
 
         //댓글 작성자와 삭제 요청자 일치 확인
-        if(!comment.getUser().getUserId().equals(userId)) {
+        if(!comment.getUser().getId().equals(Id)) {
             throw new IllegalArgumentException("댓글을 수정할 권한이 없음.");
         }
 
@@ -136,3 +136,4 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteAll(comments);
     }*/
 }
+

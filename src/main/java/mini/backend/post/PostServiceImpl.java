@@ -112,9 +112,9 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long create(Long userId, PostDtoReq postDtoReq) {
-        User user = userRepository.findByUserId(userId).orElseThrow(() ->
-                new IllegalArgumentException("해당 사용자가 존재하지 않습니다. id=" + userId));
+        public Long create(String Id, PostDtoReq postDtoReq) {
+            User user = userRepository.findById(Id).orElseThrow(() ->
+                new IllegalArgumentException("해당 사용자가 존재하지 않습니다. id=" + Id));
 
         Post post = new Post();
         post.setTitle(postDtoReq.getTitle());
@@ -127,14 +127,14 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void update(Long userId, Long postId, PostDtoReq postDtoReq) {
+    public void update(String Id, Long postId, PostDtoReq postDtoReq) {
         Post post = postRepository.findById(postId).orElseThrow(() ->
                 new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id=" + postId));
 
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다. userId: " + userId));
+        User user = userRepository.findById(Id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다. userId: " + Id));
 
-        if(Objects.equals(post.getUser().getUserId(), user.getUserId())) {
+        if(Objects.equals(post.getUser().getId(), user.getId())) {
             post.setTitle(postDtoReq.getTitle());
             post.setContent(postDtoReq.getContent());
             postRepository.save(post);
@@ -144,14 +144,14 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void delete(Long userId, Long postId) {
+    public void delete(String Id, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id=" + postId));
 
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다. userId: " + userId));
+        User user = userRepository.findById(Id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다. userId: " + Id));
 
-        if (Objects.equals(post.getUser().getUserId(), user.getUserId())) {
+        if (Objects.equals(post.getUser().getId(), user.getId())) {
             postRepository.deleteById(postId);
         } else {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
