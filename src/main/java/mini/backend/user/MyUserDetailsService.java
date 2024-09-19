@@ -1,8 +1,6 @@
 package mini.backend.user;
 
 import mini.backend.domain.User;
-import mini.backend.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,10 +12,14 @@ import java.util.Collections;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public MyUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // userId로 사용자를 로드하는 메서드
+    @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         // 데이터베이스에서 userId에 해당하는 사용자 정보 조회
         User user = userRepository.findById(id)
@@ -38,4 +40,3 @@ public class MyUserDetailsService implements UserDetailsService {
                 .build();
     }
 }
-

@@ -1,7 +1,6 @@
 package mini.backend.auth;
 
 import mini.backend.user.MyUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,22 +13,26 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class AuthenticationService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private MyUserDetailsService userDetailsService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private AuthenticationFacade authenticationFacade;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate; // RedisTemplate 사용
+    private final AuthenticationManager authenticationManager;
+    private final MyUserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationFacade authenticationFacade;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String REDIS_LOGOUT_KEY = "BLACKLISTED_TOKEN:";
+
+    // 생성자 주입
+    public AuthenticationService(AuthenticationManager authenticationManager,
+                                 MyUserDetailsService userDetailsService,
+                                 JwtUtil jwtUtil,
+                                 AuthenticationFacade authenticationFacade,
+                                 RedisTemplate<String, Object> redisTemplate) {
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
+        this.authenticationFacade = authenticationFacade;
+        this.redisTemplate = redisTemplate;
+    }
 
     public AuthDtoRes authenticate(AuthDtoReq authDtoReq) throws Exception {
         try {
@@ -43,7 +46,6 @@ public class AuthenticationService {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authDtoReq.getUsername());
         final String accessToken = jwtUtil.createJwt(String.valueOf(userDetails.getUsername()), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
 
-        // 로그인 시 블랙리스트 조회
         if (isTokenBlacklisted(accessToken)) {
             throw new Exception("The user is blacklisted. Please contact support.");
         }
@@ -55,19 +57,14 @@ public class AuthenticationService {
 
     public void logout(String json) {
         try {
-            // JSON에서 accessToken 및 refreshToken 추출
             String accessToken = jwtUtil.extractTokenFromJson(json, "accessToken");
             String refreshToken = jwtUtil.extractTokenFromJson(json, "refreshToken");
 
-            // accessToken의 만료 시간 계산
             Long expiration = jwtUtil.getClaims(accessToken, null).getExpiration().getTime() - System.currentTimeMillis();
 
-            // Redis에 accessToken을 블랙리스트로 등록 (expiration 기간 동안)
             redisTemplate.opsForValue().set(REDIS_LOGOUT_KEY + accessToken, true, expiration, TimeUnit.MILLISECONDS);
 
-            // Redis에서 refreshToken 삭제
             redisTemplate.delete(refreshToken);
-
         } catch (Exception e) {
             System.err.println("Invalid JWT token: " + json);
             throw new RuntimeException("Invalid token", e);
@@ -76,15 +73,12 @@ public class AuthenticationService {
 
     public AuthDtoRes refreshToken(String json) {
         try {
-            // JSON에서 refreshToken 추출
             String refreshToken = jwtUtil.extractTokenFromJson(json, "refreshToken");
 
-            // 토큰 만료 여부 확인
             if (jwtUtil.isExpired(refreshToken)) {
                 throw new RuntimeException("Refresh token is expired");
             }
 
-            // 사용자 정보와 새 Access Token 생성
             String username = jwtUtil.getLoginId(refreshToken);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             String newAccessToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60);
@@ -96,7 +90,6 @@ public class AuthenticationService {
         }
     }
 
-    // 블랙리스트 확인 메서드
     private boolean isTokenBlacklisted(String accessToken) {
         Boolean isBlacklisted = (Boolean) redisTemplate.opsForValue().get(REDIS_LOGOUT_KEY + accessToken);
         return isBlacklisted != null && isBlacklisted;

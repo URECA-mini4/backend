@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
 
     private final CommentService commentService;
-
-    @Autowired
-    private AuthenticationFacade authenticationFacade;
+    private final AuthenticationFacade authenticationFacade;
 
 
     // 댓글 작성 완료

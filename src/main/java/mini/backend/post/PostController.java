@@ -19,9 +19,7 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
-
-    @Autowired
-    private AuthenticationFacade authenticationFacade;
+    private final AuthenticationFacade authenticationFacade;
 
 
     // 게시물 생성
