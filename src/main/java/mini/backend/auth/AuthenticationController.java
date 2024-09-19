@@ -1,20 +1,17 @@
 package mini.backend.auth;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final AuthenticationFacade authenticationFacade;
 
-    // 생성자 주입
-    public AuthenticationController(AuthenticationService authenticationService, AuthenticationFacade authenticationFacade) {
-        this.authenticationService = authenticationService;
-        this.authenticationFacade = authenticationFacade;
-    }
 
     @PostMapping("/users/login")
     public ResponseEntity<?> login(@RequestBody AuthDtoReq authDtoReq) throws Exception {

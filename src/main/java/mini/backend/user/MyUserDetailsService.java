@@ -1,5 +1,6 @@
 package mini.backend.user;
 
+import lombok.RequiredArgsConstructor;
 import mini.backend.domain.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,14 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+@RequiredArgsConstructor
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public MyUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     // userId로 사용자를 로드하는 메서드
     @Override

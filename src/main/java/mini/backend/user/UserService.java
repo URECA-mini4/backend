@@ -1,21 +1,20 @@
 package mini.backend.user;
 
+import lombok.RequiredArgsConstructor;
 import mini.backend.domain.User;
 import mini.backend.domain.UserRole;
 import mini.backend.domain.UserStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+
 
     public void registerUser(SignupRequest signupRequest) {
         if (userRepository.existsById(signupRequest.getId())) {

@@ -66,6 +66,7 @@ public class AuthenticationServiceTest {
         assertNotNull(response.getAccessToken());
         assertEquals(refreshToken, response.getRefreshToken());
         assertFalse(jwtUtil.isExpired(response.getAccessToken()));
+        
     }
 
     public String extractTokenFromJson(String json, String tokenField) {

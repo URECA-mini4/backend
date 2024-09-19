@@ -1,5 +1,6 @@
 package mini.backend.auth;
 
+import lombok.RequiredArgsConstructor;
 import mini.backend.user.MyUserDetailsService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.TimeUnit;
 
+@RequiredArgsConstructor
 @Service
 public class AuthenticationService {
 
@@ -22,17 +24,6 @@ public class AuthenticationService {
     private static final String REDIS_LOGOUT_KEY = "BLACKLISTED_TOKEN:";
 
     // 생성자 주입
-    public AuthenticationService(AuthenticationManager authenticationManager,
-                                 MyUserDetailsService userDetailsService,
-                                 JwtUtil jwtUtil,
-                                 AuthenticationFacade authenticationFacade,
-                                 RedisTemplate<String, Object> redisTemplate) {
-        this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
-        this.authenticationFacade = authenticationFacade;
-        this.redisTemplate = redisTemplate;
-    }
 
     public AuthDtoRes authenticate(AuthDtoReq authDtoReq) throws Exception {
         try {
