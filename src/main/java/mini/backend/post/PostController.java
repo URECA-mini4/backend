@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +46,7 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostDetailDtoRes> getPost(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response) {
         PostDetailDtoRes postDetailDtoRes = postService.getPost(postId);
-        Long postView = postService.viewCountUp(postId, request, response);
+        Long postView = postService.increaseUp(postId, request, response);
         return ResponseEntity.ok(postDetailDtoRes);
     }
 

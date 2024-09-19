@@ -79,7 +79,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long viewCountUp(Long postId, HttpServletRequest request, HttpServletResponse response) {
+    public Long increaseUp(Long postId, HttpServletRequest request, HttpServletResponse response) {
         Cookie oldCookie = null;
         Long hitCount;
 
@@ -98,7 +98,7 @@ public class PostServiceImpl implements PostService{
                 oldCookie.setValue(oldCookie.getValue() + "_[" + postId.toString() + "]");
                 oldCookie.setPath("/");
                 response.addCookie(oldCookie);
-            } else{
+            } else {
                 hitCount = postHitRepository.getHit(postId);
             }
         } else {

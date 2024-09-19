@@ -2,8 +2,6 @@ package mini.backend.post;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import mini.backend.domain.Post;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -16,7 +14,7 @@ public interface PostService {
     PostDetailDtoRes getPost(Long postId);
 
     //조회수
-    Long viewCountUp(Long postId, HttpServletRequest request, HttpServletResponse response);
+    Long increaseUp(Long postId, HttpServletRequest request, HttpServletResponse response);
 
     // 생성
     Long create(Long userId, PostDtoReq postDtoReq);
