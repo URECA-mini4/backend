@@ -3,6 +3,7 @@ package mini.backend.auth;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
 import org.json.JSONObject;
 import org.json.JSONException;
 import org.springframework.stereotype.Component;
@@ -18,9 +19,10 @@ public class JwtUtil {
 
     @Value("${spring.jwt.secret}")
     private String secretkey;
-    private final SecretKey secretKey;
+    private SecretKey secretKey;
 
-    public JwtUtil() {
+    @PostConstruct
+    public void init() {
         byte[] keyBytes = secretkey.getBytes(StandardCharsets.UTF_8);
         this.secretKey = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
