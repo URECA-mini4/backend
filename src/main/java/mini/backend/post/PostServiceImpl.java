@@ -1,25 +1,25 @@
 package mini.backend.post;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mini.backend.comment.CommentDtoRes;
 import mini.backend.comment.CommentService;
-import mini.backend.domain.Comment;
 import mini.backend.domain.Post;
 import mini.backend.domain.User;
+import mini.backend.post.view.PostHitRepository;
 import mini.backend.user.UserDtoRes;
 import mini.backend.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +28,9 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+
+    private final PostHitRepository postHitRepository;
+
     private final CommentService commentService;
 
     @Override
@@ -76,8 +79,41 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long create(String Id, PostDtoReq postDtoReq) {
-        User user = userRepository.findById(Id).orElseThrow(() ->
+    public Long increaseUp(Long postId, HttpServletRequest request, HttpServletResponse response) {
+        Cookie oldCookie = null;
+        Long hitCount;
+
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null){
+            for(Cookie cookie:cookies){
+                if(cookie.getName().equals("postView")){
+                    oldCookie = cookie;
+                }
+            }
+        }
+
+        if(oldCookie != null) {
+            if (!oldCookie.getValue().contains("[" + postId.toString() + "]")) {
+                hitCount = postHitRepository.incrementHit(postId); //redis 조회수 업
+                oldCookie.setValue(oldCookie.getValue() + "_[" + postId.toString() + "]");
+                oldCookie.setPath("/");
+                response.addCookie(oldCookie);
+            } else {
+                hitCount = postHitRepository.getHit(postId);
+            }
+        } else {
+            hitCount = postHitRepository.incrementHit(postId); //redis 조회수 업
+            Cookie newCookie = new Cookie("postView", "[" + postId.toString() + "]");
+            newCookie.setPath("/");
+            response.addCookie(newCookie);
+        }
+
+        return hitCount;
+    }
+
+    @Override
+        public Long create(String Id, PostDtoReq postDtoReq) {
+            User user = userRepository.findById(Id).orElseThrow(() ->
                 new IllegalArgumentException("해당 사용자가 존재하지 않습니다. id=" + Id));
 
         Post post = new Post();

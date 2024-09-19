@@ -2,13 +2,15 @@ package mini.backend.post;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import mini.backend.auth.AuthenticationFacade;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import mini.backend.auth.AuthenticationFacade;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -48,9 +50,9 @@ public class PostController {
     // 게시물 상세 조회
     @Operation(summary = "게시물 상세 조회", description = "게시물 상세 목록을 조회합니다.")
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostDetailDtoRes> getPost(@PathVariable Long postId) {
+    public ResponseEntity<PostDetailDtoRes> getPost(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response) {
         PostDetailDtoRes postDetailDtoRes = postService.getPost(postId);
-
+        Long postView = postService.increaseUp(postId, request, response);
         return ResponseEntity.ok(postDetailDtoRes);
     }
 
