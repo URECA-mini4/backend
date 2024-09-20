@@ -11,6 +11,7 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final AuthenticationFacade authenticationFacade;
+    private final JwtUtil jwtUtil;
 
 
     @PostMapping("/users/login")
@@ -21,7 +22,9 @@ public class AuthenticationController {
 
     @PostMapping("/users/logout")
     public ResponseEntity<?> logout(@RequestBody String tokens) {
-        authenticationService.logout(tokens);
+        String accessToken = jwtUtil.extractTokenFromJson(tokens, "accessToken");
+        String refreshToken = jwtUtil.extractTokenFromJson(tokens, "refreshToken");
+        authenticationService.logout(accessToken,refreshToken);
         return ResponseEntity.ok("Successfully logged out");
     }
 

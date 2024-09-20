@@ -1,15 +1,14 @@
 package mini.backend.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import mini.backend.domain.UserStatus;
 
 @Data
 @RequiredArgsConstructor
-
-public class SignupRequest {
+public class UserDtoReq {
     private String id;
     private String password;
     private String name;
+    private UserStatus status;
 }

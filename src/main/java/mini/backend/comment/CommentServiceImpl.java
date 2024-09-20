@@ -65,7 +65,9 @@ public class CommentServiceImpl implements CommentService {
                         new UserDtoRes(
                                 comment.getUser().getUserId(),
                                 comment.getUser().getId(),
-                                comment.getUser().getName())
+                                comment.getUser().getName(),
+                                comment.getUser().getStatus(),
+                                comment.getUser().getRole())
                 ))
                 .collect(Collectors.toList());
 

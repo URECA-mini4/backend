@@ -45,9 +45,11 @@ public class PostServiceImpl implements PostService{
                         post.getTitle(),
                         post.isAnnounce(),
                         new UserDtoRes(
-                                post.getUser().getUserId(),
-                                post.getUser().getId(),
-                                post.getUser().getName()
+                                post.getUser().getUserId()
+                                , post.getUser().getId()
+                                , post.getUser().getName()
+                                , post.getUser().getStatus()
+                                , post.getUser().getRole()
                         )
                 ))
                 .collect(Collectors.toList());
@@ -66,6 +68,8 @@ public class PostServiceImpl implements PostService{
                 post.getUser().getUserId()
                 , post.getUser().getId()
                 , post.getUser().getName()
+                , post.getUser().getStatus()
+                , post.getUser().getRole()
         );
 
         return new PostDetailDtoRes(
