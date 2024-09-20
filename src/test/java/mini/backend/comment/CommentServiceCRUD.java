@@ -1,8 +1,7 @@
 package mini.backend.comment;
 
-import mini.backend.domain.Comment;
-import mini.backend.domain.Post;
-import mini.backend.domain.User;
+import mini.backend.post.Post;
+import mini.backend.user.User;
 import mini.backend.post.PostRepository;
 import mini.backend.user.UserRepository;
 import org.junit.jupiter.api.Assertions;

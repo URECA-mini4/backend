@@ -1,4 +1,4 @@
-package mini.backend.domain;
+package mini.backend.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
