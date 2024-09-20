@@ -1,11 +1,10 @@
 package mini.backend.user;
 
 import lombok.RequiredArgsConstructor;
-import mini.backend.auth.AuthenticationFacade;
-import mini.backend.domain.UserStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import mini.backend.auth.AuthenticationFacade;
+import mini.backend.domain.UserStatus;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +45,4 @@ public class UserController {
         userService.updateUserStatus(id, status);  // 서비스 호출
         return ResponseEntity.ok("User Status updated successfully!!");
     }
-
-
 }

@@ -49,7 +49,6 @@ public class AuthenticationService {
     public void logout(String accessToken, String refreshToken) {
         try {
 
-
             Long expiration = jwtUtil.getClaims(accessToken, null).getExpiration().getTime() - System.currentTimeMillis();
 
             redisTemplate.opsForValue().set(REDIS_LOGOUT_KEY + accessToken, true, expiration, TimeUnit.MILLISECONDS);
@@ -61,14 +60,8 @@ public class AuthenticationService {
         }
     }
 
-    public AuthDtoRes refreshToken(String json) {
-        try {
-            String refreshToken = jwtUtil.extractTokenFromJson(json, "refreshToken");
-
-            if (jwtUtil.isExpired(refreshToken)) {
-                throw new RuntimeException("Refresh token is expired");
-            }
-
+    public AuthDtoRes refreshToken(String refreshToken) {
+        try{
             String username = jwtUtil.getLoginId(refreshToken);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             String newAccessToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60);

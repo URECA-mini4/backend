@@ -19,6 +19,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
 
+<<<<<<< HEAD
     public void registerUser(UserDtoReq userDtoReq) {
         if (userRepository.existsById(userDtoReq.getId())) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
@@ -35,6 +36,7 @@ public class UserService {
 
         userRepository.save(newUser);
     }
+
 
     public void updateUser(String id, UserDtoReq userDtoReq) {
 
@@ -74,6 +76,4 @@ public class UserService {
                 .map(UserDtoRes::new)  // User를 UserDto로 변환
                 .collect(Collectors.toList());
     }
-
-
 }
