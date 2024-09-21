@@ -23,6 +23,9 @@ public class LikeService {
     private static final String LOCK_KEY = "likeLock:";
 
     public LikeDtoRes addLike(Long postId, String Id) {
+        User user = userRepository.findById(Id).orElseThrow(() ->
+                new IllegalArgumentException("해당 사용자가 존재하지 않습니다. id=" + Id));
+
         String lockKey = LOCK_KEY + postId;
 
         // 분산 락 시도
@@ -30,18 +33,16 @@ public class LikeService {
         if (lockAcquired != null && lockAcquired) {
             try {
 
-                Optional<User> user = userRepository.findById(Id);
-
                 String likeKey = "likes:" + postId; // 좋아요 세트 키 설정
                 // 사용자가 이미 좋아요를 누른 경우 처리
-                if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(likeKey, user.get().getUserId()))) {
+                if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(likeKey, user.getUserId()))) {
                     // 좋아요 취소
-                    redisTemplate.opsForSet().remove(likeKey, user.get().getUserId());
-                    return new LikeDtoRes(postId, user.get().getUserId(), "Like canceled.");
+                    redisTemplate.opsForSet().remove(likeKey, user.getUserId());
+                    return new LikeDtoRes(postId, user.getUserId(), "Like canceled.");
                 } else {
                     // 좋아요 추가
-                    redisTemplate.opsForSet().add(likeKey, user.get().getUserId());
-                    return new LikeDtoRes(postId, user.get().getUserId(), "Like added.");
+                    redisTemplate.opsForSet().add(likeKey, user.getUserId());
+                    return new LikeDtoRes(postId, user.getUserId(), "Like added.");
                 }
 
             } finally {

@@ -15,8 +15,7 @@ public class LikeController {
 
     @PostMapping("/{postId}/like")
     public ResponseEntity<LikeDtoRes> addLike(@PathVariable Long postId){
-//        String Id = authenticationFacade.getAuthentication();
-        String Id = "user2";
+        String Id = authenticationFacade.getAuthentication();
         LikeDtoRes createdPostLike = likeService.addLike(postId, Id);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPostLike);
