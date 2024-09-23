@@ -7,6 +7,7 @@ import mini.backend.domain.UserStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public void registerUser(UserDtoReq userDtoReq) {
         if (userRepository.existsById(userDtoReq.getId())) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
@@ -32,10 +34,10 @@ public class UserService {
                 .status(UserStatus.ACTIVED)
                 .build();
 
-        userRepository.save(newUser);
+        userRepository.save(newUser);  // 새로 생성한 유저는 영속성 컨텍스트에 저장되기 때문에 수동으로 호출
     }
 
-
+    @Transactional
     public void updateUser(String id, UserDtoReq userDtoReq) {
 
         // 기존 사용자 정보 조회
@@ -50,11 +52,9 @@ public class UserService {
             user.setPassword(encodedpassword);
         }
 
-
-        // 변경된 사용자 정보 저장
-        userRepository.save(user);
     }
 
+    @Transactional
     public void updateUserStatus(String id, UserStatus status) {
 
         User user = userRepository.findById(id)
@@ -64,7 +64,6 @@ public class UserService {
         // 상태가 다를 경우에만 업데이트
         if (!user.getStatus().equals(status)) {
             user.setStatus(status);
-            userRepository.save(user); // 변경된 사용자 정보 저장
         }
     }
 

@@ -22,9 +22,7 @@ public class AuthenticationController {
 
     @PostMapping("/users/logout")
     public ResponseEntity<?> logout(@RequestBody String tokens) {
-        String accessToken = jwtUtil.extractTokenFromJson(tokens, "accessToken");
-        String refreshToken = jwtUtil.extractTokenFromJson(tokens, "refreshToken");
-        authenticationService.logout(accessToken,refreshToken);
+        authenticationService.logout(tokens);
         return ResponseEntity.ok("Successfully logged out");
     }
 

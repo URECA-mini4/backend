@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import mini.backend.auth.AuthenticationFacade;
 import mini.backend.domain.UserStatus;
+
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,6 @@ public class UserController {
         List<UserDtoRes> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
-
 
 
     @PatchMapping("/users/{id}")

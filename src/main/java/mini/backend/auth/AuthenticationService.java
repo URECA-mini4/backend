@@ -46,22 +46,23 @@ public class AuthenticationService {
         return new AuthDtoRes(accessToken, refreshToken);
     }
 
-    public void logout(String accessToken, String refreshToken) {
+    public void logout(String json) {
         try {
-
+            String accessToken = jwtUtil.extractTokenFromJson(json, "accessToken");
+            String refreshToken = jwtUtil.extractTokenFromJson(json, "refreshToken");
             Long expiration = jwtUtil.getClaims(accessToken, null).getExpiration().getTime() - System.currentTimeMillis();
 
             redisTemplate.opsForValue().set(REDIS_LOGOUT_KEY + accessToken, true, expiration, TimeUnit.MILLISECONDS);
 
             redisTemplate.delete(refreshToken);
         } catch (Exception e) {
-            System.err.println("Invalid JWT token: " + accessToken + ", " + refreshToken);
+            System.err.println("Invalid JWT token: " + json);
             throw new RuntimeException("Invalid token", e);
         }
     }
 
     public AuthDtoRes refreshToken(String refreshToken) {
-        try{
+        try {
             String username = jwtUtil.getLoginId(refreshToken);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             String newAccessToken = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities().toString(), 1000L * 60 * 60);

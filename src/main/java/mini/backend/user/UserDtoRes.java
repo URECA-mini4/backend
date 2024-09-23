@@ -23,4 +23,6 @@ public class UserDtoRes {
         this.status = user.getStatus();
         this.role = user.getRole();
     }
+
+
 }
