@@ -11,6 +11,7 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final AuthenticationFacade authenticationFacade;
+    private final JwtUtil jwtUtil;
 
 
     @PostMapping("/users/login")

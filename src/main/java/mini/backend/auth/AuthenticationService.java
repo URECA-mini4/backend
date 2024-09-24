@@ -80,6 +80,7 @@ public class AuthenticationService {
         }
     }
 
+
     private boolean isTokenBlacklisted(String accessToken) {
         Boolean isBlacklisted = (Boolean) redisTemplate.opsForValue().get(REDIS_LOGOUT_KEY + accessToken);
         return isBlacklisted != null && isBlacklisted;

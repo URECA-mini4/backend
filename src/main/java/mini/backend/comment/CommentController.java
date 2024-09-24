@@ -23,7 +23,7 @@ public class CommentController {
         Long postId = commentDtoReq.getPostId();
         String Id = authenticationFacade.getAuthentication();
         commentService.create(commentDtoReq, postId, Id);
-        return ResponseEntity.ok("댓글 작  성 완료");
+        return ResponseEntity.ok("댓글 작성 완료");
     }
 
     // 댓글 수정

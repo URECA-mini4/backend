@@ -11,6 +11,7 @@ import mini.backend.user.User;
 import mini.backend.post.view.PostHitRepository;
 import mini.backend.user.UserDtoRes;
 import mini.backend.user.UserRepository;
+import mini.backend.user.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,9 +45,11 @@ public class PostServiceImpl implements PostService{
                         post.getTitle(),
                         post.isAnnounce(),
                         new UserDtoRes(
-                                post.getUser().getUserId(),
-                                post.getUser().getId(),
-                                post.getUser().getName()
+                                post.getUser().getUserId()
+                                , post.getUser().getId()
+                                , post.getUser().getName()
+                                , post.getUser().getStatus()
+                                , post.getUser().getRole()
                         )
                 ))
                 .collect(Collectors.toList());
@@ -65,6 +68,8 @@ public class PostServiceImpl implements PostService{
                 post.getUser().getUserId()
                 , post.getUser().getId()
                 , post.getUser().getName()
+                , post.getUser().getStatus()
+                , post.getUser().getRole()
         );
 
         return new PostDetailDtoRes(
@@ -130,7 +135,7 @@ public class PostServiceImpl implements PostService{
         User user = userRepository.findById(Id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다. userId: " + Id));
 
-        if(Objects.equals(post.getUser().getId(), user.getId())) {
+        if(Objects.equals(post.getUser().getId(), user.getId()) || user.getRole() == UserRole.ADMIN) {
             post.setTitle(postDtoReq.getTitle());
             post.setContent(postDtoReq.getContent());
             postRepository.save(post);
@@ -147,7 +152,7 @@ public class PostServiceImpl implements PostService{
         User user = userRepository.findById(Id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다. userId: " + Id));
 
-        if (Objects.equals(post.getUser().getId(), user.getId())) {
+        if (Objects.equals(post.getUser().getId(), user.getId()) || user.getRole() == UserRole.ADMIN) {
             postRepository.deleteById(postId);
         } else {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");

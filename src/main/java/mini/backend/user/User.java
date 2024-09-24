@@ -1,5 +1,6 @@
 package mini.backend.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import mini.backend.common.BaseTimeEntity;

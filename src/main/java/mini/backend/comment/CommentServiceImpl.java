@@ -6,6 +6,7 @@ import mini.backend.user.User;
 import mini.backend.post.PostRepository;
 import mini.backend.user.UserDtoRes;
 import mini.backend.user.UserRepository;
+import mini.backend.user.UserRole;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
 
         //Comment 엔티티 생성
         Comment comment = Comment.builder()
-                .user(user)
+                .user(post.getUser())
                 .post(post)
                 .content(commentDtoReq.getContent())
                 .build();
@@ -62,7 +63,9 @@ public class CommentServiceImpl implements CommentService {
                         new UserDtoRes(
                                 comment.getUser().getUserId(),
                                 comment.getUser().getId(),
-                                comment.getUser().getName())
+                                comment.getUser().getName(),
+                                comment.getUser().getStatus(),
+                                comment.getUser().getRole())
                 ))
                 .collect(Collectors.toList());
 
@@ -82,7 +85,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 commentId: " + commentId));
 
         //댓글 작성자와 수정 요청자 일치 확인
-        if(!comment.getUser().getId().equals(Id)) {
+        if(!comment.getUser().getId().equals(Id) && user.getRole() != UserRole.ADMIN) {
             throw new IllegalArgumentException("댓글을 수정할 권한이 없음.");
         }
 
@@ -106,7 +109,9 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 commentId: " + commentId));
 
         //댓글 작성자와 삭제 요청자 일치 확인
-        if(!comment.getUser().getId().equals(Id)) {
+
+
+        if(!comment.getUser().getId().equals(Id)  && user.getRole() != UserRole.ADMIN) {
             throw new IllegalArgumentException("댓글을 수정할 권한이 없음.");
         }
 
