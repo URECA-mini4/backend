@@ -2,8 +2,10 @@ package mini.backend.post.view;
 
 import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.Set;
+
 public interface PostHitRepository {
-    Long incrementHit(Long postId);
+    void incrementHit(Long postId);
     Long getHit(Long postId);
+    Set<Long> getAllUpdatedPostIds();
 }

@@ -1,6 +1,5 @@
 package mini.backend.domain;
 
-import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,5 +28,11 @@ public class Post extends BaseTimeEntity{
 
     @OneToMany(mappedBy = "post", fetch=FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
+
+    private Long PostView = 0L;
+
+    public void increasePostView(Long postView) {
+        this.PostView = postView;
+    }
 }
 

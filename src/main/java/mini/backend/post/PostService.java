@@ -14,7 +14,7 @@ public interface PostService {
     PostDetailDtoRes getPost(Long postId);
 
     //조회수
-    Long increaseUp(Long postId, HttpServletRequest request, HttpServletResponse response);
+    void increaseView(Long postId, HttpServletRequest request, HttpServletResponse response);
 
     // 생성
     Long create(String Id, PostDtoReq postDtoReq);
