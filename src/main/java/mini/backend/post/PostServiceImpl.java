@@ -9,6 +9,7 @@ import mini.backend.comment.CommentDtoRes;
 import mini.backend.comment.CommentService;
 import mini.backend.domain.Post;
 import mini.backend.domain.User;
+import mini.backend.domain.UserRole;
 import mini.backend.post.view.PostHitRepository;
 import mini.backend.user.UserDtoRes;
 import mini.backend.user.UserRepository;
@@ -138,7 +139,7 @@ public class PostServiceImpl implements PostService{
         User user = userRepository.findById(Id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다. userId: " + Id));
 
-        if(Objects.equals(post.getUser().getId(), user.getId())) {
+        if(Objects.equals(post.getUser().getId(), user.getId()) || user.getRole() == UserRole.ADMIN) {
             post.setTitle(postDtoReq.getTitle());
             post.setContent(postDtoReq.getContent());
             postRepository.save(post);
@@ -155,7 +156,7 @@ public class PostServiceImpl implements PostService{
         User user = userRepository.findById(Id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다. userId: " + Id));
 
-        if (Objects.equals(post.getUser().getId(), user.getId())) {
+        if (Objects.equals(post.getUser().getId(), user.getId()) || user.getRole() == UserRole.ADMIN) {
             postRepository.deleteById(postId);
         } else {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");

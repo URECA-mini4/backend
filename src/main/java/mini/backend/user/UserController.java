@@ -45,4 +45,18 @@ public class UserController {
         userService.updateUserStatus(id, status);  // 서비스 호출
         return ResponseEntity.ok("User Status updated successfully!!");
     }
+
+    @PostMapping("/users/admin")
+    public ResponseEntity<?> registerAdmin(@RequestBody UserDtoReq userDtoReq) {
+        userService.registerAdmin(userDtoReq);
+        return ResponseEntity.ok("Admin registered successfully!");
+    }
+
+    @PatchMapping("/users/{id}/role") // 관리자로 변경하기
+    public ResponseEntity<?> updateUserRole(@RequestBody UserDtoReq userDtoReq) {
+        String id = authenticationFacade.getAuthentication();
+        userService.updateUserRole(id);  // 서비스 호출
+        return ResponseEntity.ok("User Status updated successfully!!");
+    }
+
 }

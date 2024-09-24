@@ -38,6 +38,24 @@ public class UserService {
     }
 
     @Transactional
+    public void registerAdmin(UserDtoReq userDtoReq) {
+        if (userRepository.existsById(userDtoReq.getId())) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
+        String encodedPassword = passwordEncoder.encode(userDtoReq.getPassword());
+
+        User newUser = User.builder()
+                .id(userDtoReq.getId())
+                .password(encodedPassword)
+                .name(userDtoReq.getName())
+                .role(UserRole.ADMIN)
+                .status(UserStatus.ACTIVED)
+                .build();
+
+        userRepository.save(newUser);  // 새로 생성한 유저는 영속성 컨텍스트에 저장되기 때문에 수동으로 호출
+    }
+
+    @Transactional
     public void updateUser(String id, UserDtoReq userDtoReq) {
 
         // 기존 사용자 정보 조회
@@ -64,6 +82,19 @@ public class UserService {
         // 상태가 다를 경우에만 업데이트
         if (!user.getStatus().equals(status)) {
             user.setStatus(status);
+        }
+    }
+
+    @Transactional
+    public void updateUserRole(String id) { // 회원가입 후 관리자로 역할변경
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User를 찾을 수 없습니다!!"));
+
+
+        // 상태가 다를 경우에만 업데이트
+        if (!user.getRole().equals(UserRole.ADMIN)) {
+            user.setRole(UserRole.ADMIN);
         }
     }
 

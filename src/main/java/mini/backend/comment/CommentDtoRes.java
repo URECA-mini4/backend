@@ -19,5 +19,6 @@ public class CommentDtoRes {
     public CommentDtoRes(Comment comment) {
         this.commentId = comment.getCommentId();
         this.content = comment.getContent();
+        this.userInfo = new UserDtoRes(comment.getUser());
     }
 }
