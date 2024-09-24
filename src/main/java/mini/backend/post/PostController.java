@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import mini.backend.auth.AuthenticationFacade;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -52,7 +50,7 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostDetailDtoRes> getPost(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response) {
         PostDetailDtoRes postDetailDtoRes = postService.getPost(postId);
-        Long postView = postService.increaseUp(postId, request, response);
+        postService.increaseView(postId, request, response);
         return ResponseEntity.ok(postDetailDtoRes);
     }
 
