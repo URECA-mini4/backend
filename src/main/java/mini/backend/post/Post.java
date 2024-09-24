@@ -29,7 +29,7 @@ public class Post extends BaseTimeEntity {
 
     private boolean isAnnounce;
 
-    @OneToMany(mappedBy = "post", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "post", fetch=FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 }
 
