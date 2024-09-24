@@ -1,19 +1,16 @@
 package mini.backend.comment;
 
 import lombok.RequiredArgsConstructor;
-import mini.backend.domain.Comment;
-import mini.backend.domain.Post;
-import mini.backend.domain.User;
-import mini.backend.domain.UserRole;
+import mini.backend.post.Post;
+import mini.backend.user.User;
 import mini.backend.post.PostRepository;
 import mini.backend.user.UserDtoRes;
 import mini.backend.user.UserRepository;
-import org.hibernate.Hibernate;
+import mini.backend.user.UserRole;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

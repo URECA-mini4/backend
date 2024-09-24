@@ -1,9 +1,6 @@
 package mini.backend.user;
 
 import lombok.RequiredArgsConstructor;
-import mini.backend.domain.User;
-import mini.backend.domain.UserRole;
-import mini.backend.domain.UserStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

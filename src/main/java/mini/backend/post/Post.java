@@ -1,8 +1,10 @@
-package mini.backend.domain;
+package mini.backend.post;
 
-import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.persistence.*;
 import lombok.*;
+import mini.backend.common.BaseTimeEntity;
+import mini.backend.comment.Comment;
+import mini.backend.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Post extends BaseTimeEntity{
+public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +29,7 @@ public class Post extends BaseTimeEntity{
 
     private boolean isAnnounce;
 
-    @OneToMany(mappedBy = "post", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "post", fetch=FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 }
 
