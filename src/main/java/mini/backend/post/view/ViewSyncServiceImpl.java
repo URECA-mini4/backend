@@ -17,6 +17,7 @@ public class ViewSyncServiceImpl implements ViewSyncService {
 
     @Override
     @Scheduled(fixedRate = 10000) // 10초마다 업데이트
+    @Transactional
     public void syncHits() {
         // Redis에서 모든 포스트 ID를 가져와서 업데이트
         Set<Long> postIds = postHitRepository.getAllUpdatedPostIds();
@@ -29,11 +30,9 @@ public class ViewSyncServiceImpl implements ViewSyncService {
     }
 
     @Override
-    @Transactional
     public void updateHitCountInMysql(Long postId, Long hitCount) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found")); // 예외 처리
         post.increasePostView(hitCount);
-        postRepository.save(post);// 조회 수 업데이트
     }
 }

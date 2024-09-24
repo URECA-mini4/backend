@@ -2,7 +2,6 @@ package mini.backend.post;
 
 import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.persistence.LockModeType;
-import mini.backend.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
