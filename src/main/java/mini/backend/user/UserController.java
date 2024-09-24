@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import mini.backend.auth.AuthenticationFacade;
-import mini.backend.domain.UserStatus;
 
 import java.util.List;
 import java.util.Map;

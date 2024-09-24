@@ -3,9 +3,6 @@ package mini.backend.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import mini.backend.domain.User;
-import mini.backend.domain.UserRole;
-import mini.backend.domain.UserStatus;
 
 @Data
 @AllArgsConstructor
