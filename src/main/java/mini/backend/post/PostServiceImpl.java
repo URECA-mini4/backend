@@ -78,9 +78,8 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long increaseUp(Long postId, HttpServletRequest request, HttpServletResponse response) {
+    public void increaseView(Long postId, HttpServletRequest request, HttpServletResponse response) {
         Cookie oldCookie = null;
-        Long hitCount;
 
         Cookie[] cookies = request.getCookies();
         if(cookies != null){
@@ -93,21 +92,19 @@ public class PostServiceImpl implements PostService{
 
         if(oldCookie != null) {
             if (!oldCookie.getValue().contains("[" + postId.toString() + "]")) {
-                hitCount = postHitRepository.incrementHit(postId); //redis 조회수 업
+                postHitRepository.incrementHit(postId); //redis 조회수 업
                 oldCookie.setValue(oldCookie.getValue() + "_[" + postId.toString() + "]");
                 oldCookie.setPath("/");
                 response.addCookie(oldCookie);
             } else {
-                hitCount = postHitRepository.getHit(postId);
+                postHitRepository.getHit(postId);
             }
         } else {
-            hitCount = postHitRepository.incrementHit(postId); //redis 조회수 업
+            postHitRepository.incrementHit(postId); //redis 조회수 업
             Cookie newCookie = new Cookie("postView", "[" + postId.toString() + "]");
             newCookie.setPath("/");
             response.addCookie(newCookie);
         }
-
-        return hitCount;
     }
 
     @Override
