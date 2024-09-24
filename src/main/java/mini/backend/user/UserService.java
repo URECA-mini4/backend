@@ -70,27 +70,31 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserStatus(String id, UserStatus status) {
+    public void updateUserStatus(String username, String id, UserStatus status) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User를 찾을 수 없습니다!!"));
+        UserRole role = userRepository.findById(username)
+                .map(User::getRole)
+                .orElseThrow(() -> new UsernameNotFoundException("관리자를 찾을 수 없습니다!!"));
 
-
-        // 상태가 다를 경우에만 업데이트
-        if (!user.getStatus().equals(status)) {
+        // 사용자 직접 업데이트는 불가하므로, 관리자일 경우에만 업데이트
+        if (!user.getStatus().equals(status) && role.equals(UserRole.ADMIN)) {
             user.setStatus(status);
         }
     }
 
     @Transactional
-    public void updateUserRole(String id) { // 회원가입 후 관리자로 역할변경
+    public void updateUserRole(String username, String id) { // 회원가입 후 관리자로 역할변경
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User를 찾을 수 없습니다!!"));
+        UserRole role = userRepository.findById(username)
+                .map(User::getRole)
+                .orElseThrow(() -> new UsernameNotFoundException("관리자를 찾을 수 없습니다!!"));
 
-
-        // 상태가 다를 경우에만 업데이트
-        if (!user.getRole().equals(UserRole.ADMIN)) {
+        // 역시나 관리자일때만 업데이트 해야하므로 체크.
+        if (!user.getRole().equals(UserRole.ADMIN) && role.equals(UserRole.ADMIN)) {
             user.setRole(UserRole.ADMIN);
         }
     }

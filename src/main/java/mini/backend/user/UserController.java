@@ -39,9 +39,10 @@ public class UserController {
 
     @PatchMapping("/users/{id}/status")
     public ResponseEntity<?> updateUserStatus(@RequestBody UserDtoReq userDtoReq) {
-        String id = authenticationFacade.getAuthentication();
+        String username = authenticationFacade.getAuthentication();
+        String id = userDtoReq.getId();
         UserStatus status = userDtoReq.getStatus();  // JSON에서 status 값 추출
-        userService.updateUserStatus(id, status);  // 서비스 호출
+        userService.updateUserStatus(username, id, status);  // 서비스 호출
         return ResponseEntity.ok("User Status updated successfully!!");
     }
 
@@ -53,8 +54,9 @@ public class UserController {
 
     @PatchMapping("/users/{id}/role") // 관리자로 변경하기
     public ResponseEntity<?> updateUserRole(@RequestBody UserDtoReq userDtoReq) {
-        String id = authenticationFacade.getAuthentication();
-        userService.updateUserRole(id);  // 서비스 호출
+        String username = authenticationFacade.getAuthentication();
+        String id = userDtoReq.getId();
+        userService.updateUserRole(username, id);  // 서비스 호출
         return ResponseEntity.ok("User Status updated successfully!!");
     }
 
