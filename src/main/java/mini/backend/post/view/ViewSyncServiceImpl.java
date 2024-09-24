@@ -1,9 +1,8 @@
-package mini.backend.dataSync;
+package mini.backend.post.view;
 
 import lombok.RequiredArgsConstructor;
-import mini.backend.domain.Post;
+import mini.backend.post.Post;
 import mini.backend.post.PostRepository;
-import mini.backend.post.view.PostHitRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +11,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class DataSyncServiceImpl implements DataSyncService {
+public class ViewSyncServiceImpl implements ViewSyncService {
     private final PostHitRepository postHitRepository; // 변경된 이름
     private final PostRepository postRepository;
 
@@ -21,7 +20,6 @@ public class DataSyncServiceImpl implements DataSyncService {
     public void syncHits() {
         // Redis에서 모든 포스트 ID를 가져와서 업데이트
         Set<Long> postIds = postHitRepository.getAllUpdatedPostIds();
-
         for (Long postId : postIds) {
             Long hitCount = postHitRepository.getHit(postId);
             if (hitCount != null) {

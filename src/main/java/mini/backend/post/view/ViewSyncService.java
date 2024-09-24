@@ -1,6 +1,6 @@
-package mini.backend.dataSync;
+package mini.backend.post.view;
 
-public interface DataSyncService {
+public interface ViewSyncService {
     void syncHits();
     void updateHitCountInMysql(Long postId, Long hitCount);
 }
