@@ -1,7 +1,6 @@
 package mini.backend.user;
 
 import lombok.RequiredArgsConstructor;
-import mini.backend.domain.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

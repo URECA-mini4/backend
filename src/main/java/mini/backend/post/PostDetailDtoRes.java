@@ -2,7 +2,6 @@ package mini.backend.post;
 
 import lombok.*;
 import mini.backend.comment.CommentDtoRes;
-import mini.backend.domain.Comment;
 import mini.backend.user.UserDtoRes;
 
 import java.util.List;

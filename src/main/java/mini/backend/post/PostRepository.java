@@ -1,6 +1,5 @@
 package mini.backend.post;
 
-import mini.backend.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
